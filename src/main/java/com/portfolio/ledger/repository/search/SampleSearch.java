@@ -9,5 +9,5 @@ import java.util.List;
 public interface SampleSearch {
     Page<Sample> search1(Pageable pageable);
     Page<Sample> searchFiltered(String[] types, String keyword, Pageable pageable);
-    List<Sample> searchAll();
+    Page<Sample> searchAll(Pageable pageable);
 }

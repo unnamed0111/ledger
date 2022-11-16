@@ -1,6 +1,95 @@
-@import "reset.css";
+@import url(reset.css);
 
-.header-frame {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-    padding-top: 50px;
+.header {
+    padding-top: 100px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #000;
+}
+
+.header h1 {
+    font-size: 24pt;
+    font-weight: bold;
+}
+
+.register-form {
+    margin: 20px auto;
+    padding: 10px;
+    width: 400px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.register-form > * {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+.input-title {
+    font-weight: bold;
+    font-size: 18pt;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.input-text {
+    height: 100px;
+    resize: none;
+}
+
+.input-btn {
+    margin: 0;
+    width: 100px;
+    height: 40px;
+    display: block;
+    border-radius: 5px;
+    float: right;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background-color:rgba(0, 0, 0, 0);
+}
+
+.input-btn:hover {
+    background-color: #82c7ff;
+    border-color: #82c7ff;
+}
+
+.card {
+    margin: 20px auto;
+    padding: 10px;
+    width: 400px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: 0.5s border-color;
+}
+
+.card:hover {
+    border-color: #008cff;
+}
+
+
+.card > * {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 18pt;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.content {
+    height: 270px;
+    resize: none;
 }

@@ -71,12 +71,15 @@ public class SampleSearchImpl extends QuerydslRepositorySupport implements Sampl
     }
 
     @Override
-    public List<Sample> searchAll() {
+    public Page<Sample> searchAll(Pageable pageable) {
         QSample sample = QSample.sample;
         JPQLQuery<Sample> query = from(sample); // select ... from sample
 
-        List<Sample> list = query.fetch();
+        this.getQuerydsl().applyPagination(pageable, query);
 
-        return list;
+        List<Sample> list = query.fetch();
+        Long count = query.fetchCount();
+
+        return new PageImpl<>(list, pageable, count);
     }
 }

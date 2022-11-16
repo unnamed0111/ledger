@@ -6,22 +6,25 @@
     <link rel="stylesheet" th:href="@{/css/sample.css}">
 </head>
 <body>
-    <header class="header-frame">
-        <h1 class="header">샘플 리스트</h1>
-    </header>
-    <main>
-        <section class="list">
-            <h2>목록들</h2>
-            <ul>
-                <li th:each="dto:${list}">[[${dto.text}]]</li>
-            </ul>
-        </section>
-        <section class="inputForm">
-            <form th:action="@{/sample/write}" method="post">
-                <label for="inputText">입력</label><input id="inputText" name="text" type="text">
-                <button type="submit">전송</button>
-            </form>
-        </section>
-    </main>
+<header class="header">
+    <h1>샘플 게시판</h1>
+</header>
+<main>
+    <section>
+        <form th:action="@{/sample/write}" method="post" class="register-form">
+            <input class="input-title" type="text" name="title" placeholder="제목" required>
+            <textarea class="input-text" name="text" placeholder="내용" required></textarea>
+            <button class="input-btn" type="submit">작성</button>
+        </form>
+    </section>
+    <section>
+        <ul>
+            <li th:each="dto:${responseDTO.dtoList}" class="card">
+                <input type="text" readonly class="title" th:value="${dto.title}">
+                <textarea readonly class="content">[[${dto.text}]]</textarea>
+            </li>
+        </ul>
+    </section>
+</main>
 </body>
 </html>

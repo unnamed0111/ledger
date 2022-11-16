@@ -1,5 +1,7 @@
 package com.portfolio.ledger.controller;
 
+import com.portfolio.ledger.dto.PageRequestDTO;
+import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.dto.SampleDTO;
 import com.portfolio.ledger.service.SampleService;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +23,22 @@ public class SampleController {
     private final SampleService sampleService;
 
     @GetMapping("/list")
-    public void getList(Model model) {
+    public void getList(PageRequestDTO pageRequestDTO, Model model) {
         log.info("......................getList......................");
 
-        model.addAttribute("list", sampleService.getList());
+        PageResponseDTO<SampleDTO> responseDTO = sampleService.getList(pageRequestDTO);
+
+        model.addAttribute("responseDTO", responseDTO);
     }
 
     @PostMapping("/write")
-    public String insert(@RequestParam(name = "text", required = false) String text) {
+    public String insert(@RequestParam(name = "text", required = true) String text,
+                         @RequestParam(name = "title", required = true) String title) {
         log.info("......................insert......................");
         log.info(text);
 
         SampleDTO sampleDTO = SampleDTO.builder()
+                .title(title)
                 .text(text)
                 .build();
 
