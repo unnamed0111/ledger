@@ -3,6 +3,7 @@ package com.portfolio.ledger.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -10,10 +11,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Account {
+public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ano;
+
+    @Column(nullable = false)
+    private LocalDate date;
 
     @Column(length = 100, nullable = false)
     private String title;
@@ -35,11 +39,14 @@ public class Account {
     @Column(length = 50, nullable = false)
     private String writer;
 
-    public void change(String title,
+    public void change(LocalDate date,
+                       String title,
                        String content,
                        int amount,
                        double price,
                        boolean snp) {
+
+        this.date       = date;
         this.title      = title;
         this.content    = content;
         this.amount     = amount;

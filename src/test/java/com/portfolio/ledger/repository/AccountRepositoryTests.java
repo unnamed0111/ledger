@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -36,6 +37,7 @@ public class AccountRepositoryTests {
             double totalPrice = amount * price;
 
             Account account = Account.builder()
+                    .date(LocalDate.now().minusDays(100-i))
                     .title("title" + i)
                     .content("content" + i)
                     .amount(amount)
@@ -77,7 +79,9 @@ public class AccountRepositoryTests {
 
         Account account = accountRepository.findById(90L).orElseThrow();
 
-        account.change("changed title",
+        account.change(
+                LocalDate.now(),
+                "changed title",
                 "changed content",
                 1,
                 100,

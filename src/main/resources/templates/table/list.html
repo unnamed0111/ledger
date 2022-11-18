@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<th:block layout:fragment="title"><title>매입/출 리스트</title></th:block>
+<th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/list.css}"></th:block>
+
+<div layout:fragment="content">
+    <table>
+        <thead>
+        <tr>
+            <th>날짜</th>
+            <th>제목</th>
+            <th>단가</th>
+            <th>수량</th>
+            <th>총 금액</th>
+            <th>작성자</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="dto:${responseDTO.dtoList}">
+            <td>[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
+            <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a></td>
+            <td>[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
+            <td>[[${dto.amount}]]</td>
+            <td th:class="${dto.snp ? 'purchase' : 'sales'}">[[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
+            <td>[[${dto.writer}]]</td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <form th:action="@{/table/register}" method="post">
+                    <input type="date" name="date">
+                    <input type="text" name="title">
+                    <textarea name="content"></textarea>
+                    <input type="number" name="price">
+                    <input type="number" min="1" name="amount">
+                    <input type="checkbox" name="snp">
+                    <input type="text" name="writer">
+                    <button type="submit">등록</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+</script>
+
+</html>

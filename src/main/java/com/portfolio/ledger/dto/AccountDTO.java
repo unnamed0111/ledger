@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,6 +19,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AccountDTO {
     private Long        ano;
+
+    @NotEmpty
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate   date;
 
     @NotEmpty
     @Size(min = 1, max = 100)

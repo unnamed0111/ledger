@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
 
@@ -30,6 +31,7 @@ public class AccountServiceTests {
 
         IntStream.rangeClosed(1, 100).forEach(i -> {
             AccountDTO accountDTO = AccountDTO.builder()
+                    .date(LocalDate.now().minusDays(100 - i))
                     .title("Title Sample" + i)
                     .content("Content Sample" + i)
                     .amount(i)
