@@ -1,15 +1,9 @@
 package com.portfolio.ledger.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -17,10 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class AccountDTO {
+    static final boolean SYMBOL_SALES    = true;
+    static final boolean SYMBOL_PURCHASE = false;
+
     private Long        ano;
 
-    @NotEmpty
+    @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate   date;
 
@@ -37,7 +35,8 @@ public class AccountDTO {
     @Positive
     private double      price;
 
-    private boolean     snp;
+    @Builder.Default
+    private boolean     snp = SYMBOL_SALES;
 
     @NotEmpty
     private String      writer;

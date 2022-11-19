@@ -7,6 +7,7 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/list.css}"></th:block>
 
 <div layout:fragment="content">
+    <!-- 매입/출 목록 -->
     <table>
         <thead>
         <tr>
@@ -31,6 +32,9 @@
         <tr>
             <td colspan="6">
                 <form th:action="@{/table/register}" method="post">
+                    <!-- 페이지 정보 전달 -->
+                    <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
+
                     <input type="date" name="date">
                     <input type="text" name="title">
                     <textarea name="content"></textarea>
@@ -44,9 +48,32 @@
         </tr>
         </tbody>
     </table>
+    <!-- 페이징 -->
+    <ul th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
+        <th:block th:if="${responseDTO.prev}">
+        <!-- 이전 버튼 -->
+        <li >
+            <a th:href="|${link}&page=${responseDTO.start - 1}|">이전</a>
+        </li>
+        </th:block>
+
+        <!-- 페이지 번호 버튼 -->
+        <li th:each="i:${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+            <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}|">[[${i}]]</a>
+        </li>
+
+        <th:block th:if="${responseDTO.next}">
+        <!-- 다음 버튼 -->
+        <li >
+            <a th:href="|${link}&page=${responseDTO.end + 1}|">다음</a>
+        </li>
+        </th:block>
+    </ul>
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
+    errors = [[${errors}]];
+    console.log(errors);
 
 </script>
 

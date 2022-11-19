@@ -5,6 +5,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -15,7 +18,7 @@ public class PageRequestDTO {
     private int page = 1;
 
     @Builder.Default
-    private int size = 30;
+    private int size = 5;
 
     private String link;
 
@@ -28,11 +31,20 @@ public class PageRequestDTO {
             StringBuilder builder = new StringBuilder();
 
             builder.append("page=" + this.page);
-            builder.append("$size=" + this.size);
+            builder.append("&size=" + this.size);
 
             link = builder.toString();
         }
 
         return link;
+    }
+
+    public Map<String, String> getInfo() {
+        Map<String, String> info = new HashMap<>();
+
+        info.put("page", Integer.toString(page));
+        info.put("size", Integer.toString(size));
+
+        return info;
     }
 }
