@@ -6,6 +6,6 @@ import com.portfolio.ledger.dto.PageResponseDTO;
 
 public interface AccountService {
     Long register(AccountDTO accountDTO);
-
     PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO);
+    AccountDTO get(Long ano);
 }

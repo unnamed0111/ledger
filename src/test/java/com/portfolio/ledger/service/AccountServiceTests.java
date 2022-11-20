@@ -19,7 +19,7 @@ public class AccountServiceTests {
     @Autowired
     private AccountService accountService;
 
-    @BeforeEach
+//    @BeforeEach
     public void testInitialize() {
         // 기록 저장
         testRegister();
@@ -35,7 +35,7 @@ public class AccountServiceTests {
                     .title("Title Sample" + i)
                     .content("Content Sample" + i)
                     .amount(i)
-                    .price(100L)
+                    .price(100.0)
                     .snp(i % 2 == 0 ? true : false)
                     .writer("user" + i)
                     .build();
@@ -49,12 +49,20 @@ public class AccountServiceTests {
         log.info(".........................GET LIST.........................");
 
         PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .page(3)
+                .page(1)
                 .size(20)
                 .build();
 
          PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
 
          responseDTO.getDtoList().forEach(accountDTO -> log.info(accountDTO));
+    }
+
+    @Test
+    public void testGetOne() {
+        log.info(".........................GET.........................");
+
+        AccountDTO accountDTO = accountService.get(50L);
+        log.info(accountDTO);
     }
 }

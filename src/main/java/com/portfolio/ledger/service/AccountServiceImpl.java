@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,5 +46,14 @@ public class AccountServiceImpl implements AccountService {
                 .dtoList(dtoList)
                 .total((int) result.getTotalElements())
                 .build();
+    }
+
+    @Override
+    public AccountDTO get(Long ano) {
+        Optional<Account> result = accountRepository.findById(ano);
+        Account account = result.orElseThrow();
+        AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
+
+        return accountDTO;
     }
 }

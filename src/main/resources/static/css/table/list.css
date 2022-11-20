@@ -1,0 +1,8 @@
+.register-form > input,
+.register-form > textarea {
+    display: block;
+}
+
+.error {
+    color: red;
+}

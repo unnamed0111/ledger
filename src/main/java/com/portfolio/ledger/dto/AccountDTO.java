@@ -18,27 +18,29 @@ public class AccountDTO {
 
     private Long        ano;
 
-    @NotNull
+    @NotNull(message = "{required.accountDTO.date}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate   date;
 
-    @NotEmpty
+    @NotEmpty(message = "{required.accountDTO.title}")
     @Size(min = 1, max = 100)
     private String      title;
 
-    @NotEmpty
+    @NotEmpty(message = "{required.accountDTO.content}")
     private String      content;
 
+    @NotNull(message = "{required.accountDTO.amount}")
     @Positive
-    private int         amount;
+    private Integer         amount;
 
+    @NotNull(message = "{required.accountDTO.price}")
     @Positive
-    private double      price;
+    private Double      price;
 
     @Builder.Default
-    private boolean     snp = SYMBOL_SALES;
+    private boolean     snp = SYMBOL_PURCHASE;
 
-    @NotEmpty
+    @NotEmpty(message = "{required.accountDTO.writer}")
     private String      writer;
 
     private LocalDateTime regDate;

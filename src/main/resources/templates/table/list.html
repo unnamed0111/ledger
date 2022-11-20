@@ -31,17 +31,17 @@
         </tr>
         <tr>
             <td colspan="6">
-                <form th:action="@{/table/register}" method="post">
+                <form th:action="@{/table/register}" method="post" class="register-form">
                     <!-- 페이지 정보 전달 -->
                     <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
 
-                    <input type="date" name="date">
-                    <input type="text" name="title">
-                    <textarea name="content"></textarea>
-                    <input type="number" name="price">
-                    <input type="number" min="1" name="amount">
-                    <input type="checkbox" name="snp">
-                    <input type="text" name="writer">
+                    <label for="date">날짜</label><input id="date" type="date" name="date">
+                    <label for="title">제목</label><input id="title" type="text" name="title">
+                    <label for="content">내용</label><textarea id="content" name="content"></textarea>
+                    <label for="price">단가</label><input id="price" type="number" step="any" name="price">
+                    <label for="amount">수량</label><input id="amount" type="number" min="1" name="amount">
+                    <label for="snp">매출/지출</label><input id="snp" type="checkbox" name="snp">
+                    <label for="writer">작성자</label><input id="writer" type="text" name="writer">
                     <button type="submit">등록</button>
                 </form>
             </td>
@@ -75,6 +75,16 @@
     errors = [[${errors}]];
     console.log(errors);
 
+    if(errors != null) {
+        errors.forEach(error => {
+            let ref = document.getElementById(error['field']);
+            let el = document.createElement('div');
+            el.setAttribute('class', 'error');
+            el.innerHTML = error.defaultMessage;
+
+            ref.parentNode.insertBefore(el, ref.nextSibling);
+        });
+    }
 </script>
 
 </html>
