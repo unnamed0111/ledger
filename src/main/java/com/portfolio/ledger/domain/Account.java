@@ -44,7 +44,8 @@ public class Account extends BaseEntity {
                        String content,
                        int amount,
                        double price,
-                       boolean snp) {
+                       boolean snp,
+                       String writer) {
 
         this.date       = date;
         this.title      = title;
@@ -52,5 +53,6 @@ public class Account extends BaseEntity {
         this.amount     = amount;
         this.price      = price;
         this.snp        = snp;
+        this.writer     = writer;
     }
 }

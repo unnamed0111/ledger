@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 public class AccountDTO {
-    static final boolean SYMBOL_SALES    = true;
-    static final boolean SYMBOL_PURCHASE = false;
+    static public final boolean SYMBOL_SALES    = true;
+    static public final boolean SYMBOL_PURCHASE = false;
 
     private Long        ano;
 

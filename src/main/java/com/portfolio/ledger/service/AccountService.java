@@ -8,4 +8,6 @@ public interface AccountService {
     Long register(AccountDTO accountDTO);
     PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO);
     AccountDTO get(Long ano);
+    void modify(AccountDTO accountDTO);
+    void remove(Long ano);
 }

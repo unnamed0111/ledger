@@ -65,4 +65,41 @@ public class AccountServiceTests {
         AccountDTO accountDTO = accountService.get(50L);
         log.info(accountDTO);
     }
+
+    @Test
+    public void testModify() {
+        log.info(".........................MODIFY.........................");
+
+        Long ano = 97L;
+
+        AccountDTO accountDTO = AccountDTO.builder()
+                .date(LocalDate.now())
+                .title("Fixed Title")
+                .content("Fixed Content")
+                .amount(250)
+                .price(22.2)
+                .snp(AccountDTO.SYMBOL_SALES)
+                .writer("ModifiedUser")
+                .build();
+
+        accountDTO.setAno(ano);
+
+        log.info("original dto : " + accountDTO);
+
+        accountService.modify(accountDTO);
+    }
+
+    @Test
+    public void testRemove() {
+        Long ano = 87L;
+
+        accountService.remove(ano);
+    }
+
+    @Test
+    public void testAll() {
+        testModify();
+        testRemove();
+        testGetList();
+    }
 }

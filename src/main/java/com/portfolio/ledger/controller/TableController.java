@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -65,5 +62,42 @@ public class TableController {
         log.info(accountDTO);
 
         model.addAttribute("dto", accountDTO);
+    }
+
+    @GetMapping("/modify")
+    public void modifyGet(@RequestParam(name = "ano") Long ano, PageRequestDTO pageRequestDTO, Model model) {
+        log.info("...........................GET MODIFY...........................");
+
+        AccountDTO accountDTO = accountService.get(ano);
+
+        model.addAttribute("dto", accountDTO);
+    }
+
+    @PostMapping("/modify")
+    public String modify(@Valid AccountDTO accountDTO,
+                         BindingResult bindingResult,
+                         PageRequestDTO pageRequestDTO,
+                         RedirectAttributes redirectAttributes) {
+        log.info("...........................POST MODIFY...........................");
+
+        if(bindingResult.hasErrors()) {
+            log.info(".................HAS ERRORS.................");
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            return "redirect:/table/modify?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
+        }
+
+        accountService.modify(accountDTO);
+
+        // 정상 수정 됐을 때
+        return "redirect:/table/read?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
+    }
+
+    @PostMapping("/remove")
+    public String remove(@RequestParam(name = "ano") Long ano) {
+        accountService.remove(ano);
+
+        return "redirect:/table/list";
     }
 }

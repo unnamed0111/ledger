@@ -56,4 +56,27 @@ public class AccountServiceImpl implements AccountService {
 
         return accountDTO;
     }
+
+    @Override
+    public void modify(AccountDTO accountDTO) {
+        Optional<Account> result = accountRepository.findById(accountDTO.getAno());
+        Account account = result.orElseThrow();
+
+        account.change(
+                accountDTO.getDate(),
+                accountDTO.getTitle(),
+                accountDTO.getContent(),
+                accountDTO.getAmount(),
+                accountDTO.getPrice(),
+                accountDTO.isSnp(),
+                accountDTO.getWriter()
+        );
+
+        accountRepository.save(account);
+    }
+
+    @Override
+    public void remove(Long ano) {
+        accountRepository.deleteById(ano);
+    }
 }

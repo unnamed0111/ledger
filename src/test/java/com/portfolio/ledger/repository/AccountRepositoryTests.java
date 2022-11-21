@@ -85,7 +85,8 @@ public class AccountRepositoryTests {
                 "changed content",
                 1,
                 100,
-                false);
+                false,
+                "changedUser");
 
         accountRepository.save(account);
     }
