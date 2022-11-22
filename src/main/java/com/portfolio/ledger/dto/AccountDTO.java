@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class AccountDTO {
     static public final boolean SYMBOL_SALES    = true;
     static public final boolean SYMBOL_PURCHASE = false;
@@ -45,6 +44,24 @@ public class AccountDTO {
 
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    public AccountDTO(Long ano,
+                      LocalDate date,
+                      String title,
+                      String content,
+                      Integer amount,
+                      Double price,
+                      boolean snp,
+                      String writer) {
+        this.ano = ano;
+        this.date = date;
+        this.title = title;
+        this.content = content;
+        this.amount = amount;
+        this.price = price;
+        this.snp = snp;
+        this.writer = writer;
+    }
 
     // 뷰에서 총금액 보여주기
     public double getTotalPrice() {
