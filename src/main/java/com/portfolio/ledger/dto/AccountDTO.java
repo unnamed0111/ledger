@@ -42,26 +42,10 @@ public class AccountDTO {
     @NotEmpty(message = "{required.accountDTO.writer}")
     private String      writer;
 
+    private Long        replyCount;
+
     private LocalDateTime regDate;
     private LocalDateTime modDate;
-
-    public AccountDTO(Long ano,
-                      LocalDate date,
-                      String title,
-                      String content,
-                      Integer amount,
-                      Double price,
-                      boolean snp,
-                      String writer) {
-        this.ano = ano;
-        this.date = date;
-        this.title = title;
-        this.content = content;
-        this.amount = amount;
-        this.price = price;
-        this.snp = snp;
-        this.writer = writer;
-    }
 
     // 뷰에서 총금액 보여주기
     public double getTotalPrice() {

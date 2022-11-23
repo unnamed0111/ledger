@@ -23,7 +23,7 @@
         <tbody>
         <tr th:each="dto:${responseDTO.dtoList}">
             <td>[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
-            <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a></td>
+            <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}">[[${dto.replyCount}]]</span></td>
             <td>[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
             <td>[[${dto.amount}]]</td>
             <td th:class="${dto.snp ? 'purchase' : 'sales'}">[[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>

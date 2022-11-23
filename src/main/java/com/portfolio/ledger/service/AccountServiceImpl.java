@@ -36,10 +36,8 @@ public class AccountServiceImpl implements AccountService {
     public PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.getPageable("ano");
 
-        Page<Account> result = accountRepository.searchList(pageable);
-        List<AccountDTO> dtoList = result.getContent().stream()
-                .map(account -> modelMapper.map(account, AccountDTO.class))
-                .collect(Collectors.toList());
+        Page<AccountDTO> result = accountRepository.searchList(pageable);
+        List<AccountDTO> dtoList = result.getContent();
 
         return PageResponseDTO.<AccountDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)

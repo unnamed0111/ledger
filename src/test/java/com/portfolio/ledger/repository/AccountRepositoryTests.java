@@ -1,6 +1,8 @@
 package com.portfolio.ledger.repository;
 
 import com.portfolio.ledger.domain.Account;
+import com.portfolio.ledger.domain.Reply;
+import com.portfolio.ledger.dto.AccountDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +23,30 @@ public class AccountRepositoryTests {
     @Autowired
     private AccountRepository accountRepository;
 
+    // 샘플 댓글 생성 용도
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @BeforeEach
     public void testInitialize() {
-        testInsert();
-        testUpdate();
-        testDelete();
+        insertReply();
+    }
+
+    // 댓글 생성 용도
+    public void insertReply() {
+        log.info("............................REPLY INSERT............................");
+
+        Account account = Account.builder().ano(95L).build();
+
+        IntStream.rangeClosed(1, 20).forEach(i -> {
+            Reply reply = Reply.builder()
+                    .account(account)
+                    .content("댓글...." + i)
+                    .writer("User" + (i % 4))
+                    .build();
+
+            replyRepository.save(reply);
+        });
     }
 
     @Test
@@ -58,10 +79,10 @@ public class AccountRepositoryTests {
 
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("ano").descending());
 
-        Page<Account> result = accountRepository.searchList(pageable);
+        Page<AccountDTO> result = accountRepository.searchList(pageable);
 
         long count = result.getTotalElements();
-        List<Account> accountList = result.getContent();
+        List<AccountDTO> accountList = result.getContent();
 
         log.info("..........................SEARCH RESULT..........................");
         log.info("Total Elements : " + count);
@@ -98,4 +119,15 @@ public class AccountRepositoryTests {
         accountRepository.deleteById(89L);
     }
 
+    @Test
+    public void testSearchWithReplyCount() {
+        log.info("..........................SEARCH WITH REPLY COUNT..........................");
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("ano").descending());
+
+        Page<AccountDTO> result = accountRepository.searchList(pageable);
+        result.getContent().forEach(accountDTO -> {
+            log.info(accountDTO);
+        });
+    }
 }
