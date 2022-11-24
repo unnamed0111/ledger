@@ -1,6 +1,9 @@
 package com.portfolio.ledger.dev;
 
+import com.portfolio.ledger.domain.Account;
+import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.repository.ReplyRepository;
 import com.portfolio.ledger.service.AccountService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +20,18 @@ public class Initialize implements ApplicationRunner {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         log.info(".......................INITIALIZE SAMPLE DATA.......................");
 
-        sampleInsert();
+        sampleAccountInsert();
+        sampleReplyInsert();
     }
 
-    private void sampleInsert() {
+    private void sampleAccountInsert() {
         IntStream.rangeClosed(1, 100).forEach(i -> {
             int     amount  = (int)(Math.random() * 100) + 1;
             double  price   = (Math.random() * 10000) + 100; // 100 원 이상
@@ -40,6 +47,26 @@ public class Initialize implements ApplicationRunner {
                     .build();
 
             accountService.register(accountDTO);
+        });
+    }
+
+    public void sampleReplyInsert() {
+        log.info("............................REPLY INSERT............................");
+
+        IntStream.rangeClosed(1, 20).forEach(i -> {
+            Account account = Account.builder().ano(101 - (long) i).build();
+
+            int number = (int)(Math.random() * 4) + 1;
+
+            for (int j = 0; j < number; j++) {
+                Reply reply = Reply.builder()
+                        .account(account)
+                        .content("유저" + (i % 4) + "댓글...." + j + 1)
+                        .writer("User" + (i % 4))
+                        .build();
+
+                replyRepository.save(reply);
+            }
         });
     }
 }

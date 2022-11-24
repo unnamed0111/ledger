@@ -24,4 +24,8 @@ public class Reply extends BaseEntity {
 
     private String content;
     private String writer;
+
+    public void changeContent(String content) {
+        this.content = content;
+    }
 }
