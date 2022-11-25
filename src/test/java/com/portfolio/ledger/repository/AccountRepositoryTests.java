@@ -13,8 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -24,37 +27,42 @@ public class AccountRepositoryTests {
     private AccountRepository accountRepository;
 
     // 샘플 댓글 생성 용도
-    @Autowired
-    private ReplyRepository replyRepository;
+//    @Autowired
+//    private ReplyRepository replyRepository;
+//
+//    @BeforeEach
+//    public void testInitialize() {
+//        insertReply();
+//    }
+//
+//    // 댓글 생성 용도
+//    public void insertReply() {
+//        log.info("............................REPLY INSERT............................");
+//
+//        Account account = Account.builder().ano(95L).build();
+//
+//        IntStream.rangeClosed(1, 20).forEach(i -> {
+//            Reply reply = Reply.builder()
+//                    .account(account)
+//                    .content("댓글...." + i)
+//                    .writer("User" + (i % 4))
+//                    .build();
+//
+//            replyRepository.save(reply);
+//        });
+//    }
 
     @BeforeEach
-    public void testInitialize() {
-        insertReply();
-    }
-
-    // 댓글 생성 용도
-    public void insertReply() {
-        log.info("............................REPLY INSERT............................");
-
-        Account account = Account.builder().ano(95L).build();
-
-        IntStream.rangeClosed(1, 20).forEach(i -> {
-            Reply reply = Reply.builder()
-                    .account(account)
-                    .content("댓글...." + i)
-                    .writer("User" + (i % 4))
-                    .build();
-
-            replyRepository.save(reply);
-        });
+    public void initialize() {
+        testInsert();
     }
 
     @Test
     public void testInsert() {
         log.info("..........................INSERT..........................");
         IntStream.rangeClosed(1, 100).forEach(i -> {
-            int amount = (int)Math.ceil(Math.random() * 20);
-            double price = 1000 + Math.ceil(Math.random() * 100000);
+            int amount = 2;
+            double price = 10.05;
             double totalPrice = amount * price;
 
             Account account = Account.builder()
@@ -63,7 +71,7 @@ public class AccountRepositoryTests {
                     .content("content" + i)
                     .amount(amount)
                     .price(price)
-                    .snp(false)
+                    .snp(i % 2 == 0 ? true : false)
                     .writer("user" + i)
                     .build();
 
@@ -129,5 +137,17 @@ public class AccountRepositoryTests {
         result.getContent().forEach(accountDTO -> {
             log.info(accountDTO);
         });
+    }
+
+    @Test
+    public void testSearchTotalPrice() {
+        log.info("..........................SEARCH TOTAL PRICE..........................");
+
+        Map<String, Double> result = accountRepository.searchTotalPrice();
+
+        DecimalFormat df = new DecimalFormat("#.###");
+
+        log.info("total sales price = " + df.format(result.get("totalSalesPrice")));
+        log.info("total purchase price = " + df.format(result.get("totalPurchasePrice")));
     }
 }

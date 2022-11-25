@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @ToString
@@ -24,6 +25,8 @@ public class PageResponseDTO<E> {
     private boolean next;   // 다음 페이지 존재 여부
 
     private List<E> dtoList;
+
+    private Map<String, Double> totalPrice;
 
     @Builder(builderMethodName = "withAll")
     public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total) { // total은 총 갯수
