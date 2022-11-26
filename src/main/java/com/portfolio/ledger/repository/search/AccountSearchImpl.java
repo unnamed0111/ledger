@@ -5,8 +5,12 @@ import com.portfolio.ledger.domain.QAccount;
 import com.portfolio.ledger.domain.QReply;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.JPQLQueryFactory;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
@@ -63,24 +67,41 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
     public Map<String, Double> searchTotalPrice() {
         QAccount account = QAccount.account;
 
-        // 매출 총합 구하기
-        Double totalSalesPrice = getQuerydsl().createQuery()
-                .select(account.price.multiply(account.amount).sum())
-                .from(account)
-                .where(account.snp.eq(AccountDTO.SYMBOL_SALES))
-                .fetchOne();
+//        // 매출 총합 구하기
+//        Double totalSalesPrice = getQuerydsl().createQuery()
+//                .select(account.price.multiply(account.amount).sum())
+//                .from(account)
+//                .where(account.snp.eq(AccountDTO.SYMBOL_SALES))
+//                .fetchOne();
+//
+//        // 지출 총합 구하기
+//        Double totalPurchasePrice = getQuerydsl().createQuery()
+//                .select(account.price.multiply(account.amount).sum())
+//                .from(account)
+//                .where(account.snp.eq(AccountDTO.SYMBOL_PURCHASE))
+//                .fetchOne();
 
-        // 지출 총합 구하기
-        Double totalPurchasePrice = getQuerydsl().createQuery()
-                .select(account.price.multiply(account.amount).sum())
-                .from(account)
-                .where(account.snp.eq(AccountDTO.SYMBOL_PURCHASE))
-                .fetchOne();
+        NumberExpression<Double> sumOfSales = new CaseBuilder()
+                .when(account.snp.eq(AccountDTO.SYMBOL_SALES))
+                .then(account.price.multiply(account.amount))
+                .otherwise((Double) null);
 
-        Map<String, Double> result = new HashMap<>();
-        result.put("totalSalesPrice", totalSalesPrice);
-        result.put("totalPurchasePrice", totalPurchasePrice);
+        NumberExpression<Double> sumOfPurchase = new CaseBuilder()
+                .when(account.snp.eq(AccountDTO.SYMBOL_PURCHASE))
+                .then(account.price.multiply(account.amount))
+                .otherwise((Double) null);
 
-        return result;
+        JPQLQuery<Tuple> query = getQuerydsl().createQuery();
+        query
+                .select(sumOfSales.sum(), sumOfPurchase.sum())
+                .from(account);
+
+        Tuple result = query.fetchOne();
+
+        Map<String, Double> totalPrice = new HashMap<>();
+        totalPrice.put("totalSalesPrice", result.get(0, Double.class));
+        totalPrice.put("totalPurchasePrice", result.get(1, Double.class));
+
+        return totalPrice;
     }
 }
