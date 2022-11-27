@@ -1,4 +1,4 @@
-//package com.portfolio.ledger.dev;
+package com.portfolio.ledger.dev;
 //
 //import com.portfolio.ledger.domain.Account;
 //import com.portfolio.ledger.domain.Reply;
@@ -70,3 +70,37 @@
 //        });
 //    }
 //}
+
+import lombok.Cleanup;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.Statement;
+
+@Log4j2
+@Component
+public class Initialize implements ApplicationRunner {
+    @Autowired
+    private DataSource dataSource;
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("............CREATE TABLE PERSISTENT LOGINS............");
+
+        @Cleanup Connection connection = dataSource.getConnection();
+
+        Statement statement = connection.createStatement();
+        String sql =    "CREATE TABLE persistent_logins (" +
+                            "username VARCHAR(64) NOT NULL ," +
+                            "series VARCHAR(64) PRIMARY KEY ," +
+                            "token VARCHAR(64) NOT NULL ," +
+                            "last_used TIMESTAMP NOT NULL" +
+                        ")";
+
+        statement.execute(sql);
+    }
+}

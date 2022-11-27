@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+    <link rel="stylesheet" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" th:href="@{/css/member/login.css}">
+</head>
+<body>
+    <div th:if="${param.logout != null}">정삭적으로 로그아웃 되었습니다.</div>
+    <form action="/member/login" method="post">
+        <label for="userId">아이디</label><input id="userId" type="text" name="username" placeholder="아이디를 입력해주세요">
+        <label for="userPwd">비밀번호</label><input id="userPwd" type="password" name="password" placeholder="비밀번호를 입력해주세요">
+        <label for="rememberUser">자동 로그인</label><input id="rememberUser" type="checkbox" name="remember-me">
+        <button type="submit">로그인</button>
+    </form>
+</body>
+</html>

@@ -48,14 +48,12 @@ public class AccountServiceTests {
     public void testGetList() {
         log.info(".........................GET LIST.........................");
 
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
-                .page(1)
-                .size(20)
-                .build();
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build(); // 기본 page = 1, size = 5
 
          PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
 
-         responseDTO.getDtoList().forEach(accountDTO -> log.info(accountDTO));
+//         responseDTO.getDtoList().forEach(accountDTO -> log.info(accountDTO));
+        log.info(responseDTO);
     }
 
     @Test

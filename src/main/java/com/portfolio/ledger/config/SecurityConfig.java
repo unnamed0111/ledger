@@ -1,5 +1,6 @@
 package com.portfolio.ledger.config;
 
+import com.portfolio.ledger.security.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -11,6 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 @Log4j2
 @Configuration
@@ -18,24 +23,46 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Controller 전체 메소드에 대해서 접근권한 설정
 public class SecurityConfig {
 
+    private final DataSource dataSource;
+    private final CustomUserDetailService userDetailService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info(".......................SECURITY CONFIGURE.......................");
 
-        http.formLogin();
+        http
+                .formLogin() // 로그인 화면에서 로그인을 진행한다는 설정
+                .loginPage("/member/login"); // 로그인 사용자 경로를 설정
 
-        return http.build();
+        http.csrf().disable(); // CSRF 토큰 이용을 비활성화
+
+        http.rememberMe() // 쿠키를 발행해서 로그인 기억 기능 설정 (로그인 페이지를 커스터마이징 했을 때 사용)
+                .key("12345678") // 쿠키의 값을 인코딩하기 위한 키값
+                .tokenRepository(persistentTokenRepository()) // 쿠키값과 사용자 정보 저장소 설정
+                .userDetailsService(userDetailService)
+                .tokenValiditySeconds(60 * 60 * 24 * 30);
+
+        return http.build(); // 인증/접근 방식을 초기화 시키고 직접 설정할려면 build()를 사용해서 설정해야함
     }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         log.info("........................WEB CONFIGURE........................");
 
+        // 정적 자원들을 스프링 시큐리티에서 제외시키기
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        // 정보를 저장하기 위해서 추가
+        JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+        repo.setDataSource(dataSource);
+        return repo;
     }
 }

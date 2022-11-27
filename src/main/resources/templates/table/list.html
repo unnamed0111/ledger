@@ -57,10 +57,12 @@
         </li>
         </th:block>
 
+        <th:block th:if="${responseDTO.total > 0}">
         <!-- 페이지 번호 버튼 -->
         <li th:each="i:${#numbers.sequence(responseDTO.start, responseDTO.end)}">
             <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}|">[[${i}]]</a>
         </li>
+        </th:block>
 
         <th:block th:if="${responseDTO.next}">
         <!-- 다음 버튼 -->

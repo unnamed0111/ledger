@@ -53,6 +53,7 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.0'
 
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 }
 
 tasks.named('test') {

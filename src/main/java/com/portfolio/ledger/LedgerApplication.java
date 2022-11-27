@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @EnableJpaAuditing
 public class LedgerApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(LedgerApplication.class, args);
     }
