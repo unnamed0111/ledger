@@ -31,7 +31,7 @@ public class SecurityConfig {
         log.info(".......................SECURITY CONFIGURE.......................");
 
         http
-                .formLogin() // 로그인 화면에서 로그인을 진행한다는 설정
+                .formLogin() // 로그인을 폼방식으로 처리한다고 명시
                 .loginPage("/member/login"); // 로그인 사용자 경로를 설정
 
         http.csrf().disable(); // CSRF 토큰 이용을 비활성화

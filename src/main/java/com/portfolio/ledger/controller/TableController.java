@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,9 +40,11 @@ public class TableController {
     public String register(@Valid AccountDTO accountDTO,
                            BindingResult bindingResult,
                            PageRequestDTO pageRequestDTO,
+                           Principal principal,
                            RedirectAttributes redirectAttributes) {
         log.info("...........................POST ACCOUNT LIST...........................");
         log.info("pageRequestDTO : " + pageRequestDTO);
+        log.info(principal);
 
         if (bindingResult.hasErrors()) {
             log.info("...........................HAS ERRORS...........................");
@@ -51,6 +54,7 @@ public class TableController {
             return "redirect:/table/list?" + pageRequestDTO.getLink();
         }
 
+        accountDTO.setWriter(principal.getName());
         accountService.register(accountDTO);
 
         return "redirect:/table/list";
