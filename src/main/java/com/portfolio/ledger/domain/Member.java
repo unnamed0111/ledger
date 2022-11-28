@@ -2,10 +2,7 @@ package com.portfolio.ledger.domain;
 
 import lombok.*;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,9 +17,16 @@ public class Member extends BaseEntity {
     @Id
     private String mid;
 
+    @Column(name = "mpw")
     private String mpw;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "del")
     private boolean del;
+
+    @Column(name = "social")
     private boolean social;
 
     @ElementCollection(fetch = FetchType.LAZY)
