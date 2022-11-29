@@ -98,9 +98,12 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
 
         Tuple result = query.fetchOne();
 
+        Double totalSalesPrice = result.get(0, Double.class);
+        Double totalPurchasePrice = result.get(1, Double.class);
+
         Map<String, Double> totalPrice = new HashMap<>();
-        totalPrice.put("totalSalesPrice", result.get(0, Double.class));
-        totalPrice.put("totalPurchasePrice", result.get(1, Double.class));
+        totalPrice.put("totalSalesPrice", totalSalesPrice != null ? totalSalesPrice : 0);
+        totalPrice.put("totalPurchasePrice", totalPurchasePrice != null ? totalPurchasePrice : 0);
 
         return totalPrice;
     }

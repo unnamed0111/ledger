@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -99,5 +100,13 @@ public class AccountServiceTests {
         testModify();
         testRemove();
         testGetList();
+    }
+
+    @Test
+    public void testTotalPrice() {
+        Map<String, Double> result = accountService.getTotalPrice();
+
+        log.info("..................................GET TOTAL PRICE..................................");
+        log.info(result);
     }
 }

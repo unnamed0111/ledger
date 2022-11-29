@@ -1,6 +1,6 @@
 package com.portfolio.ledger.config;
 
-import com.portfolio.ledger.security.CustomUserDetailService;
+import com.portfolio.ledger.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     private final DataSource dataSource;
-    private final CustomUserDetailService userDetailService;
+    private final CustomUserDetailsService userDetailService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

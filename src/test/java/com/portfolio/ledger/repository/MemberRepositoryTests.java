@@ -52,18 +52,18 @@ public class MemberRepositoryTests {
         });
     }
 
-@Test
-public void testSearch() {
-    log.info("........................SEARCH MEMBER........................");
+    @Test
+    public void testSearch() {
+        log.info("........................SEARCH MEMBER........................");
 
-    Pageable pageable = PageRequest.of(0, 10, Sort.by("email").descending());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("email").descending());
 
-    Page<Member> result = memberRepository.search(pageable);
+        Page<Member> result = memberRepository.search(pageable);
 
-    List<Member> list = result.getContent();
+        List<Member> list = result.getContent();
 
-    list.forEach(member -> log.info(member));
-}
+        list.forEach(member -> log.info(member));
+    }
 
     @Test
     public void testSelectAll() {

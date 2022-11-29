@@ -12,6 +12,7 @@
 <body>
   <header>
     <h1>공통 상단 화면</h1>
+    <p th:if="${#authentication.principal != 'anonymousUser'}">[[${#authentication.principal.username}]] 님 안녕하세요.</p>
   </header>
   <main>
     <th:block layout:fragment="content">

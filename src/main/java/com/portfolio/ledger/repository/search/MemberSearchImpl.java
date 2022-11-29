@@ -21,7 +21,8 @@ public class MemberSearchImpl extends QuerydslRepositorySupport implements Membe
         QMember member = QMember.member;
         JPQLQuery<Member> query = from(member);
 
-        List<Member> list = this.getQuerydsl().applyPagination(pageable, query).fetch();
+        this.getQuerydsl().applyPagination(pageable, query).fetch();
+        List<Member> list = query.fetch();
         Long count = query.fetchCount();
 
         return new PageImpl<>(list, pageable, count);

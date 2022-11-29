@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/table")
@@ -31,8 +32,10 @@ public class TableController {
         log.info("........................GET ACCOUNT LIST........................");
 
         PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
+        Map<String, Double> totalPrice = accountService.getTotalPrice();
 
         model.addAttribute("responseDTO", responseDTO);
+        model.addAttribute("totalPrice", totalPrice);
     }
 
     @PreAuthorize("hasRole('USER')")

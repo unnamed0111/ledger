@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +49,7 @@ public class SampleServiceImpl implements SampleService {
         return PageResponseDTO.<SampleDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
     }
 }

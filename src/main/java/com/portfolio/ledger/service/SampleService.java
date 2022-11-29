@@ -6,6 +6,7 @@ import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.dto.SampleDTO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface SampleService {

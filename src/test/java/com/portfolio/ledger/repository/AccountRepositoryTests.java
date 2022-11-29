@@ -52,7 +52,7 @@ public class AccountRepositoryTests {
 //        });
 //    }
 
-    @BeforeEach
+//    @BeforeEach
     public void initialize() {
         testInsert();
     }
