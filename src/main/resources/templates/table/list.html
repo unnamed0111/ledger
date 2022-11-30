@@ -29,7 +29,7 @@
             <td th:class="${dto.snp ? 'purchase' : 'sales'}">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
             <td>[[${dto.writer}]]</td>
         </tr>
-        <tr>
+        <tr th:if="${#authentication.principal != 'anonymousUser'}">
             <td colspan="6">
                 <form th:action="@{/table/register}" method="post" class="register-form">
                     <!-- 페이지 정보 전달 -->
@@ -41,7 +41,7 @@
                     <label for="price">단가</label><input id="price" type="number" step="any" name="price">
                     <label for="amount">수량</label><input id="amount" type="number" min="1" name="amount">
                     <label for="snp">매출/지출</label><input id="snp" type="checkbox" name="snp">
-                    <label for="writer">작성자</label><input id="writer" type="text" name="writer">
+                    <label for="writer">작성자</label><input id="writer" type="text" name="writer" readonly th:value="${#authentication.principal.username}">
                     <button type="submit">등록</button>
                 </form>
             </td>

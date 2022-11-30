@@ -27,7 +27,7 @@ public class MemberRepositoryTests {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-//    @BeforeEach
+    @BeforeEach
     public void createSample() {
         testInserts();
     }
@@ -35,7 +35,7 @@ public class MemberRepositoryTests {
     public void testInserts() {
         log.info("..........................INSERT SAMPLE..........................");
 
-        IntStream.rangeClosed(1, 100).forEach(i -> {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
             Member member = Member.builder()
                     .mid("user" + i)
                     .mpw(passwordEncoder.encode("1111"))
@@ -53,15 +53,15 @@ public class MemberRepositoryTests {
     }
 
     @Test
-    public void testSearch() {
+    public void testSearchBySorted() {
         log.info("........................SEARCH MEMBER........................");
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("email").descending());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("regDate").descending());
 
         Page<Member> result = memberRepository.search(pageable);
 
+        log.info("^^^^^^^^^^^^^^^^^^^^^TEST METHOD^^^^^^^^^^^^^^^^^^^^^");
         List<Member> list = result.getContent();
-
         list.forEach(member -> log.info(member));
     }
 

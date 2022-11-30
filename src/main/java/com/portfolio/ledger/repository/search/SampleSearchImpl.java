@@ -1,16 +1,24 @@
 package com.portfolio.ledger.repository.search;
 
+import com.portfolio.ledger.domain.Member;
 import com.portfolio.ledger.domain.QSample;
 import com.portfolio.ledger.domain.Sample;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.JPQLQuery;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Log4j2
 public class SampleSearchImpl extends QuerydslRepositorySupport implements SampleSearch {
 
     public SampleSearchImpl() {
@@ -72,10 +80,27 @@ public class SampleSearchImpl extends QuerydslRepositorySupport implements Sampl
 
     @Override
     public Page<Sample> searchAll(Pageable pageable) {
-        QSample sample = QSample.sample;
-        JPQLQuery<Sample> query = from(sample); // select ... from sample
+        QSample sample = new QSample("test_sample");
+        JPQLQuery<Sample> query = from(sample); // select ... from sample test_sample
 
-        this.getQuerydsl().applyPagination(pageable, query);
+//        query.limit(pageable.getPageSize());
+//        query.offset(pageable.getOffset());
+//
+//        if (pageable.getSort().isSorted()) {
+//            List<OrderSpecifier> orders = new ArrayList<>();
+//
+//            pageable.getSort().forEach(order -> {
+//                StringPath column = Expressions.stringPath(sample, order.getProperty());
+//                orders.add(order.getDirection().isAscending() ? column.asc() : column.desc());
+//            });
+//
+//            query.orderBy(orders.stream().toArray(OrderSpecifier[]::new));
+//        }
+
+        getQuerydsl().applyPagination(pageable, query); // 위 주석 코드와 같음
+
+        log.info("*********SAMPLE QUERY**********");
+        log.info(query.toString());
 
         List<Sample> list = query.fetch();
         Long count = query.fetchCount();

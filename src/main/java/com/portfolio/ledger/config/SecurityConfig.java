@@ -24,7 +24,7 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     private final DataSource dataSource;
-    private final CustomUserDetailsService userDetailService;
+    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,7 +39,7 @@ public class SecurityConfig {
         http.rememberMe() // 쿠키를 발행해서 로그인 기억 기능 설정 (로그인 페이지를 커스터마이징 했을 때 사용)
                 .key("12345678") // 쿠키의 값을 인코딩하기 위한 키값
                 .tokenRepository(persistentTokenRepository()) // 쿠키값과 사용자 정보 저장소 설정
-                .userDetailsService(userDetailService)
+                .userDetailsService(userDetailsService)
                 .tokenValiditySeconds(60 * 60 * 24 * 30);
 
         return http.build(); // 인증/접근 방식을 초기화 시키고 직접 설정할려면 build()를 사용해서 설정해야함

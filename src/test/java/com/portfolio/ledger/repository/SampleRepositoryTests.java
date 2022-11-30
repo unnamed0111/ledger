@@ -96,7 +96,7 @@ public class SampleRepositoryTests {
 
     @Test
     public void testSearchAll() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("title").descending());
 
         Page<Sample> result = sampleRepository.searchAll(pageable);
 
