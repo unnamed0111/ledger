@@ -66,7 +66,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testModify() {
+    public void testModify() throws Exception {
         log.info(".........................MODIFY.........................");
 
         Long ano = 97L;
@@ -89,14 +89,14 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testRemove() {
+    public void testRemove() throws Exception {
         Long ano = 87L;
 
-        accountService.remove(ano);
+        accountService.remove(AccountDTO.builder().ano(ano).build());
     }
 
     @Test
-    public void testAll() {
+    public void testAll() throws Exception {
         testModify();
         testRemove();
         testGetList();

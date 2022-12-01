@@ -57,9 +57,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void modify(AccountDTO accountDTO) {
+    public void modify(AccountDTO accountDTO) throws Exception {
         Optional<Account> result = accountRepository.findById(accountDTO.getAno());
         Account account = result.orElseThrow();
+
+        if(!account.getWriter().equals(accountDTO.getWriter())) throw new Exception("not owner");
 
         account.change(
                 accountDTO.getDate(),
@@ -75,8 +77,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void remove(Long ano) {
-        accountRepository.deleteById(ano);
+    public void remove(AccountDTO accountDTO) throws Exception {
+        Optional<Account> result = accountRepository.findById(accountDTO.getAno());
+        Account account = result.orElseThrow();
+
+        if(!account.getWriter().equals(accountDTO.getWriter())) throw new Exception("not owner");
+
+        accountRepository.deleteById(accountDTO.getAno());
     }
 
     @Override

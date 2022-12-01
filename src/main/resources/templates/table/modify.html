@@ -15,7 +15,7 @@
         <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}" name="price">
         <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}" name="amount">
         <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}" name="snp">
-        <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}" name="writer">
+        <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}" name="writer" readonly>
         <button type="submit">수정</button>
         <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
     </form>

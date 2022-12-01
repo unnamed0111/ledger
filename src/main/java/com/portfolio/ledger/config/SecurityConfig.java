@@ -42,6 +42,10 @@ public class SecurityConfig {
                 .userDetailsService(userDetailsService)
                 .tokenValiditySeconds(60 * 60 * 24 * 30);
 
+        http
+                .oauth2Login() // OAuth2 로그인 활성화
+                .loginPage("/member/login"); // OAuth2 로그인 페이지 설정
+
         return http.build(); // 인증/접근 방식을 초기화 시키고 직접 설정할려면 build()를 사용해서 설정해야함
     }
 

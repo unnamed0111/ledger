@@ -86,8 +86,12 @@ public class TableController {
     public String modify(@Valid AccountDTO accountDTO,
                          BindingResult bindingResult,
                          PageRequestDTO pageRequestDTO,
+                         Principal principal,
                          RedirectAttributes redirectAttributes) {
         log.info("...........................POST MODIFY...........................");
+        log.info("USER NAME : " + principal.getName());
+
+        accountDTO.setWriter(principal.getName());
 
         if(bindingResult.hasErrors()) {
             log.info(".................HAS ERRORS.................");
@@ -97,15 +101,37 @@ public class TableController {
             return "redirect:/table/modify?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
         }
 
-        accountService.modify(accountDTO);
+        try {
+            accountService.modify(accountDTO);
+        } catch (Exception e) {
+            log.info("==================THIS USER IS NOT OWNER==================");
+
+            redirectAttributes.addFlashAttribute("errors", e.getMessage());
+
+            return "redirect:/table/read?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
+        }
 
         // 정상 수정 됐을 때
         return "redirect:/table/read?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
     }
 
     @PostMapping("/remove")
-    public String remove(@RequestParam(name = "ano") Long ano) {
-        accountService.remove(ano);
+    public String remove(AccountDTO accountDTO,
+                         Principal principal,
+                         PageRequestDTO pageRequestDTO,
+                         RedirectAttributes redirectAttributes) {
+
+        accountDTO.setWriter(principal.getName());
+
+        try {
+            accountService.remove(accountDTO);
+        } catch (Exception e) {
+            log.info("==================THIS USER IS NOT OWNER==================");
+
+            redirectAttributes.addFlashAttribute("errors", e.getMessage());
+
+            return "redirect:/table/read?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
+        }
 
         return "redirect:/table/list";
     }

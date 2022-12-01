@@ -10,8 +10,8 @@ public interface AccountService {
     Long register(AccountDTO accountDTO);
     PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO);
     AccountDTO get(Long ano);
-    void modify(AccountDTO accountDTO);
-    void remove(Long ano);
+    void modify(AccountDTO accountDTO) throws Exception;
+    void remove(AccountDTO accountDTO) throws Exception;
 
     Map<String, Double> getTotalPrice();
 }

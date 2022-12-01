@@ -15,10 +15,16 @@
     <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}">
     <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}">
 
-    <form th:action="@{/table/remove}" method="post">
+    <form th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
         <input type="hidden" name="ano" th:value="${dto.ano}">
         <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
-        <a th:href="|@{/table/modify(ano=${dto.ano})}&${pageRequestDTO.link}|">수정</a>
-        <button type="submit">삭제</button>
+        <th:block th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
+            <a th:href="|@{/table/modify(ano=${dto.ano})}&${pageRequestDTO.link}|">수정</a>
+            <button type="submit">삭제</button>
+        </th:block>
     </form>
 </div>
+
+<script th:fragment="script" th:inline="javascript">
+    console.log(errors);
+</script>

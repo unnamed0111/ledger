@@ -34,6 +34,9 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("username not found");
         }
 
+        log.info("+++++++++++++++++++++++Member : +++++++++++++++++++++++");
+        log.info(result.orElseThrow());
+
         Member member = result.get();
 
         MemberSecurityDTO memberSecurityDTO = new MemberSecurityDTO(
@@ -48,14 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         .collect(Collectors.toList())
         );
 
-//        UserDetails userDetails = User.builder()
-//                .username("user1")
-////                .password("1111")
-//                .password(passwordEncoder.encode("1111"))
-//                .authorities("ROLE_USER")
-//                .build();
-
-        log.info("..........MEMBER SECURITY DTO INFO : " + memberSecurityDTO.toString());
+        log.info("..........MEMBER SECURITY DTO INFO : " + memberSecurityDTO);
 
         return memberSecurityDTO;
     }
