@@ -38,14 +38,20 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public String join(MemberJoinDTO memberJoinDTO, RedirectAttributes redirectAttributes) {
+    public String join(@Valid MemberJoinDTO memberJoinDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info(".....................................JOIN POST.....................................");
         log.info(memberJoinDTO);
+
+        if(bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            return "redirect:/member/join";
+        }
 
         try {
             memberService.join(memberJoinDTO);
         } catch (MemberService.MidExistException e) {
-            redirectAttributes.addFlashAttribute("error", "mid");
+            redirectAttributes.addFlashAttribute("error", "mid existed");
 
             return "redirect:/member/join";
         }
