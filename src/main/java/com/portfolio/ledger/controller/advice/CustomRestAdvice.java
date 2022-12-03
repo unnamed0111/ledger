@@ -1,5 +1,6 @@
 package com.portfolio.ledger.controller.advice;
 
+import com.portfolio.ledger.exception.NotOwnerException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -61,6 +62,19 @@ public class CustomRestAdvice {
 
         errorMap.put("time", "" + System.currentTimeMillis());
         errorMap.put("msg", "No Such Element Exception");
+
+        return ResponseEntity.badRequest().body(errorMap);
+    }
+
+    @ExceptionHandler(NotOwnerException.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<Map<String, String>> handleNotOwnerException(Exception e) {
+        log.error(e);
+
+        Map<String, String> errorMap = new HashMap<>();
+
+        errorMap.put("time", "" + System.currentTimeMillis());
+        errorMap.put("msg", "You are not owner");
 
         return ResponseEntity.badRequest().body(errorMap);
     }

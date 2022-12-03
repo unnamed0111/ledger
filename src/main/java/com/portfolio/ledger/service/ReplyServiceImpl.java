@@ -4,6 +4,7 @@ import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.dto.ReplyDTO;
+import com.portfolio.ledger.exception.NotOwnerException;
 import com.portfolio.ledger.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -56,8 +57,10 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void modify(ReplyDTO replyDTO) {
+    public void modify(ReplyDTO replyDTO) throws NotOwnerException {
         Reply reply = replyRepository.findById(replyDTO.getRno()).orElseThrow();
+
+        if(!reply.getWriter().equals(replyDTO.getWriter())) throw new NotOwnerException("not owner");
 
         reply.changeContent(replyDTO.getContent());
 
@@ -65,7 +68,11 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void remove(Long rno) {
-        replyRepository.deleteById(rno);
+    public void remove(ReplyDTO replyDTO) throws NotOwnerException {
+        Reply reply = replyRepository.findById(replyDTO.getRno()).orElseThrow();
+
+        if(!reply.getWriter().equals(replyDTO.getWriter())) throw new NotOwnerException("not owner");
+
+        replyRepository.deleteById(replyDTO.getRno());
     }
 }

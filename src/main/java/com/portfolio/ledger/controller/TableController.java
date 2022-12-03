@@ -82,6 +82,7 @@ public class TableController {
         model.addAttribute("dto", accountDTO);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/modify")
     public String modify(@Valid AccountDTO accountDTO,
                          BindingResult bindingResult,
@@ -115,6 +116,7 @@ public class TableController {
         return "redirect:/table/read?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/remove")
     public String remove(AccountDTO accountDTO,
                          Principal principal,

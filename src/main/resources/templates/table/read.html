@@ -7,24 +7,59 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/read.css}"></th:block>
 
 <div layout:fragment="content">
-    <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}">
-    <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}">
-    <label for="content">내용</label><textarea id="content">[[${dto.content}]]</textarea>
-    <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}">
-    <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}">
-    <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}">
-    <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}">
+    <section>
+        <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}">
+        <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}">
+        <label for="content">내용</label><textarea id="content">[[${dto.content}]]</textarea>
+        <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}">
+        <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}">
+        <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}">
+        <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}">
 
-    <form th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
-        <input type="hidden" name="ano" th:value="${dto.ano}">
-        <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
-        <th:block th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
-            <a th:href="|@{/table/modify(ano=${dto.ano})}&${pageRequestDTO.link}|">수정</a>
-            <button type="submit">삭제</button>
-        </th:block>
-    </form>
+        <form th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
+            <input type="hidden" name="ano" th:value="${dto.ano}">
+            <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
+            <th:block th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
+                <a th:href="|@{/table/modify(ano=${dto.ano})}&${pageRequestDTO.link}|">수정</a>
+                <button type="submit">삭제</button>
+            </th:block>
+        </form>
+    </section>
+
+    <section th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
+        <form id="replyForm" action="">
+            <input type="hidden" th:value="${dto.ano}">
+            <label for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
+            <label for="replyContent">내용</label><input id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요">
+            <button id="replyRegisterBtn" type="button">등록</button>
+        </form>
+
+        <ul id="replyList">
+        </ul>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/reply.js"></script>
 </div>
 
-<script th:fragment="script" th:inline="javascript">
+<script layout:fragment="script" th:inline="javascript">
     console.log(errors);
+
+    const ano = [[${dto.ano}]];
+
+    function getReplies(page, size, goLast) {
+        getList({ano, page, size, goLast})
+            .then(
+                data => {
+                    console.log(data)
+                }
+            )
+            .catch(
+                error => {
+                    console.log(error)
+                }
+            )
+    }
+
+    getReplies(1, 10);
 </script>

@@ -4,6 +4,7 @@ import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
+import com.portfolio.ledger.exception.NotOwnerException;
 import com.portfolio.ledger.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -57,11 +58,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void modify(AccountDTO accountDTO) throws Exception {
+    public void modify(AccountDTO accountDTO) throws NotOwnerException {
         Optional<Account> result = accountRepository.findById(accountDTO.getAno());
         Account account = result.orElseThrow();
 
-        if(!account.getWriter().equals(accountDTO.getWriter())) throw new Exception("not owner");
+        if(!account.getWriter().equals(accountDTO.getWriter())) throw new NotOwnerException("not owner");
 
         account.change(
                 accountDTO.getDate(),
@@ -77,11 +78,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void remove(AccountDTO accountDTO) throws Exception {
+    public void remove(AccountDTO accountDTO) throws NotOwnerException
+    {
         Optional<Account> result = accountRepository.findById(accountDTO.getAno());
         Account account = result.orElseThrow();
 
-        if(!account.getWriter().equals(accountDTO.getWriter())) throw new Exception("not owner");
+        if(!account.getWriter().equals(accountDTO.getWriter())) throw new NotOwnerException("not owner");
 
         accountRepository.deleteById(accountDTO.getAno());
     }
