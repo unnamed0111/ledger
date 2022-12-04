@@ -12,7 +12,12 @@
 <body>
   <header>
     <h1>공통 상단 화면</h1>
-    <p th:if="${#authentication.principal != 'anonymousUser'}">[[${#authentication.principal.username}]] 님 안녕하세요.</p>
+    <div class="user-info">
+      <p th:if="${#authentication.principal != 'anonymousUser'}">[[${#authentication.principal.username}]] 님 안녕하세요.</p>
+      <th:block th:with="loginCheck = ${#authentication.principal != 'anonymousUser'}">
+        <a th:href="${loginCheck ? '/member/logout' : '/member/login'}">[[${loginCheck ? '로그아웃' : '로그인'}]]</a>
+      </th:block>
+    </div>
   </header>
   <main>
     <th:block layout:fragment="content">

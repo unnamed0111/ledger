@@ -26,15 +26,16 @@
         </form>
     </section>
 
-    <section th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
-        <form id="replyForm" action="">
+    <section>
+        <form id="replyForm" action="" th:if="${#authentication.principal != 'anonymousUser'}" data-mode="post">
             <input type="hidden" th:value="${dto.ano}">
             <label for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
-            <label for="replyContent">내용</label><input id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요">
+            <label for="replyContent">내용</label><textarea id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요"></textarea>
             <button id="replyRegisterBtn" type="button">등록</button>
         </form>
 
         <ul id="replyList">
+
         </ul>
     </section>
 
@@ -47,11 +48,23 @@
 
     const ano = [[${dto.ano}]];
 
+    // 로그인한 유저인지 확인
+    const isUser    = [[${#authentication.principal != 'anonymousUser'}]];
+    const userName  = [[${#authentication.principal != 'anonymousUser' ? #authentication.principal.username : null}]];
+
+    // 댓글 노드
+    const replyList         = document.getElementById("replyList");
+    const replyForm         = document.getElementById("replyForm");
+    const replyRegisterBtn  = document.getElementById("replyRegisterBtn");
+    const replyContent      = document.getElementById("replyContent");
+
+    // 댓글 목록 출력
     function getReplies(page, size, goLast) {
         getList({ano, page, size, goLast})
             .then(
-                data => {
-                    console.log(data)
+                responseDTO => {
+                    console.log(responseDTO)
+                    showReplies(responseDTO);
                 }
             )
             .catch(
@@ -59,6 +72,107 @@
                     console.log(error)
                 }
             )
+    }
+
+    function showReplies(responseDTO) {
+        if(responseDTO.total <= 0) return;
+
+        const dtoList = responseDTO.dtoList;
+
+        let str = '';
+
+        for(const dto of dtoList) {
+            str += `<li className="reply-item" data-rno="${dto.rno}">`;
+            str += `
+                <input type="text" value="${dto.writer}" readonly>
+                <textarea type="text" readonly>${dto.content}</textarea>
+                <time datetime="${dto.regDate}">${dto.regDate}</time>
+            `;
+
+            if(userName === dto.writer) {
+                str += `<button class="replyModifyBtn">수정</button>`;
+                str += `<button class="replyRemoveBtn">삭제</button>`;
+            }
+
+            str += '</li>';
+        }
+
+        replyList.innerHTML = str;
+    }
+
+    // 댓글 등록
+
+
+    if(isUser) {
+        replyRegisterBtn.addEventListener("click", function (e) {
+            const replyObj = { ano: ano, content: replyContent.value };
+
+            if(replyForm.getAttribute("data-mode") === 'post') {
+                addReply(replyObj)
+                    .then(
+                        data => {
+                            if(data == null || data.length <= 0) return;
+
+                            getReplies(1, 10);
+                        }
+                    )
+                    .catch(
+                        error => {
+                            alert("Exception... Check the console.log");
+                            console.log(error);
+                        }
+                    );
+            } else {
+                replyObj.rno = replyForm.getAttribute("data-rno");
+
+                modifyReply(replyObj)
+                    .then(
+                        data => {
+                            if(data == null || data.length <= 0) return;
+
+                            getReplies(1, 10);
+                        }
+                    )
+                    .catch(
+                        error => {
+                            alert("Exception... Check the console.log");
+                            console.log(error);
+                        }
+                    );
+            }
+
+        }, false);
+    }
+
+    // 댓글 수정 (and 삭제 - 나중에 추가 )
+
+    if(isUser) {
+        replyList.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const target = e.target;
+
+            if(!target || target.tagName != 'BUTTON') return;
+
+            // const replyItem = target.parentElement;
+            // const rno = replyItem.getAttribute("data-rno");
+            const rno = target.parentElement.getAttribute("data-rno");
+
+            if(!rno) return;
+
+            modifyContent = target // <button>
+                .previousElementSibling // <time>
+                .previousElementSibling // <textarea>
+
+            console.log(modifyContent);
+
+            replyForm.setAttribute("data-mode", "put");
+            replyForm.setAttribute("data-rno", rno);
+            // replyForm.innerHTML += `<button id="replyCancelBtn">취소</button>`; // 해당 부분은 css로 hidden 처리해도 됨
+            replyContent.innerText = modifyContent.value;
+            replyRegisterBtn.innerText = "수정";
+        }, false);
     }
 
     getReplies(1, 10);

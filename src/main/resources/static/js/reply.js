@@ -3,3 +3,15 @@ async function getList({ano, page, size, goLast}) {
 
     return result.data;
 }
+
+async function addReply(replyObj) {
+    const response = await axios.post(`/replies/`, replyObj);
+
+    return response.data
+}
+
+async function modifyReply(replyObj) {
+    const response = await axios.put(`/replies/${replyObj.rno}`, replyObj);
+
+    return response.data;
+}

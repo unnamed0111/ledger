@@ -1,5 +1,7 @@
 package com.portfolio.ledger.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -21,9 +23,11 @@ public class ReplyDTO {
     @NotEmpty
     private String content;
 
-    @NotEmpty
     private String writer;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;
+
+    @JsonIgnore
     private LocalDateTime modDate;
 }
