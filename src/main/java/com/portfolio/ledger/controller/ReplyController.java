@@ -56,7 +56,7 @@ public class ReplyController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping(value = "/{rno}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{rno}")
     public Map<String, Long> remove(@PathVariable("rno") Long rno, Principal principal) throws NotOwnerException {
 
         ReplyDTO replyDTO = ReplyDTO.builder()

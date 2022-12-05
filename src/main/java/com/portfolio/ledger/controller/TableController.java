@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +97,12 @@ public class TableController {
 
         if(bindingResult.hasErrors()) {
             log.info(".................HAS ERRORS.................");
+
+            Map<String, Object> errors = new HashMap<>();
+
+            errors.put("errorType", "BindingException");
+            errors.put("message", "유효하지 않은 값입니다.");
+            errors.put("time", "" + System.currentTimeMillis());
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 

@@ -1,5 +1,6 @@
 package com.portfolio.ledger.controller.advice;
 
+import com.portfolio.ledger.controller.ReplyController;
 import com.portfolio.ledger.exception.NotOwnerException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackageClasses = {ReplyController.class})
 @Log4j2
 public class CustomRestAdvice {
 
