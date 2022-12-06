@@ -31,16 +31,21 @@
         </tr>
         <tr th:if="${#authentication.principal != 'anonymousUser'}">
             <td colspan="6">
-                <form th:action="@{/table/register}" method="post" class="register-form">
+                <form th:action="@{/table/register}" th:object="${accountDTO}" method="post" class="register-form">
                     <!-- 페이지 정보 전달 -->
                     <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
 
-                    <label for="date">날짜</label><input id="date" type="date" name="date">
-                    <label for="title">제목</label><input id="title" type="text" name="title">
-                    <label for="content">내용</label><textarea id="content" name="content"></textarea>
-                    <label for="price">단가</label><input id="price" type="number" step="any" name="price">
-                    <label for="amount">수량</label><input id="amount" type="number" min="1" name="amount">
-                    <label for="snp">매출/지출</label><input id="snp" type="checkbox" name="snp">
+                    <label for="date">날짜</label><input th:field="*{date}" id="date" type="date" name="date">
+                    <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
+                    <label for="title">제목</label><input th:field="*{title}" id="title" type="text" name="title">
+                    <p th:if="${#fields.hasErrors('title')}" th:errorclass="error" th:errors="*{title}"/>
+                    <label for="content">내용</label><textarea th:field="*{content}" id="content" name="content"></textarea>
+                    <p th:if="${#fields.hasErrors('content')}" th:errorclass="error" th:errors="*{content}"/>
+                    <label for="price">단가</label><input th:field="*{price}" id="price" type="number" step="any" name="price">
+                    <p th:if="${#fields.hasErrors('price')}" th:errorclass="error" th:errors="*{price}"/>
+                    <label for="amount">수량</label><input th:field="*{amount}" id="amount" type="number" min="1" name="amount">
+                    <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
+                    <label for="snp">매출/지출</label><input th:field="*{snp}" id="snp" type="checkbox" name="snp">
                     <label for="writer">작성자</label><input id="writer" type="text" name="writer" readonly th:value="${#authentication.principal.username}">
                     <button type="submit">등록</button>
                 </form>
@@ -80,21 +85,7 @@
         </li>
         </th:block>
     </ul>
+
+    <div th:text="${bindingResult}"></div>
 </div>
-
-<script layout:fragment="script" th:inline="javascript">
-    console.log(errors);
-
-    if(errors != null) {
-        errors.forEach(error => {
-            let ref = document.getElementById(error['field']);
-            let el = document.createElement('div');
-            el.setAttribute('class', 'error');
-            el.innerHTML = error.defaultMessage;
-
-            ref.parentNode.insertBefore(el, ref.nextSibling);
-        });
-    }
-</script>
-
 </html>

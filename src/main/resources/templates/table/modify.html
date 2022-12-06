@@ -7,9 +7,10 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/modify.css}"></th:block>
 
 <div layout:fragment="content">
-    <form th:action="@{/table/modify}" method="post">
+    <form th:action="@{/table/modify}" th:object="${dto}" method="post">
         <input type="hidden" name="ano" th:value="${dto.ano}">
         <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}" name="date">
+        <p th:if="${#fields.hasErrors('date')}">날짜형식을 올바르게 입력하세요</p>
         <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}" name="title">
         <label for="content">내용</label><textarea id="content" name="content">[[${dto.content}]]</textarea>
         <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}" name="price">

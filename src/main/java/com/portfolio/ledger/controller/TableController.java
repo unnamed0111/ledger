@@ -6,7 +6,6 @@ import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,8 +26,15 @@ public class TableController {
     private final AccountService accountService;
 
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model) {
+    public void list(PageRequestDTO pageRequestDTO, Model model, AccountDTO accountDTO) {
         log.info("........................GET ACCOUNT LIST........................");
+
+        if(model.containsAttribute("accountDTOBindingResult")) {
+            model.addAttribute(
+                    "org.springframework.validation.BindingResult.accountDTO",
+                    model.asMap().get("accountDTOBindingResult")
+            );
+        }
 
         PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
         Map<String, Double> totalPrice = accountService.getTotalPrice();
@@ -54,8 +58,11 @@ public class TableController {
             log.info("...........................HAS ERRORS...........................");
             log.info("AccountDTO : " + accountDTO);
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            return "redirect:/table/list?" + pageRequestDTO.getLink();
+            redirectAttributes.addFlashAttribute("accountDTOBindingResult",bindingResult);
+            redirectAttributes.addFlashAttribute(accountDTO);
+            redirectAttributes.addFlashAttribute(pageRequestDTO);
+
+            return "redirect:/table/list";
         }
 
         accountDTO.setWriter(principal.getName());
@@ -75,10 +82,19 @@ public class TableController {
     }
 
     @GetMapping("/modify")
-    public void modifyGet(@RequestParam(name = "ano") Long ano, PageRequestDTO pageRequestDTO, Model model) {
+    public void modifyGet(@RequestParam(name = "ano", required = true) Long ano, PageRequestDTO pageRequestDTO, AccountDTO accountDTO, Model model) {
         log.info("...........................GET MODIFY...........................");
 
-        AccountDTO accountDTO = accountService.get(ano);
+        if(model.containsAttribute("accountDTOBindingResult")) {
+            log.info("accountDTO is!!!");
+
+            model.addAttribute(
+                    "org.springframework.validation.BindingResult.accountDTO",
+                    model.asMap().get("accountDTOBindingResult")
+            );
+        } else {
+            accountDTO = accountService.get(ano);
+        }
 
         model.addAttribute("dto", accountDTO);
     }
@@ -98,15 +114,11 @@ public class TableController {
         if(bindingResult.hasErrors()) {
             log.info(".................HAS ERRORS.................");
 
-            Map<String, Object> errors = new HashMap<>();
+            redirectAttributes.addFlashAttribute(pageRequestDTO);
+            redirectAttributes.addFlashAttribute(accountDTO);
+            redirectAttributes.addFlashAttribute("accountDTOBindingResult", bindingResult);
 
-            errors.put("errorType", "BindingException");
-            errors.put("message", "유효하지 않은 값입니다.");
-            errors.put("time", "" + System.currentTimeMillis());
-
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-
-            return "redirect:/table/modify?ano=" + accountDTO.getAno() + "&" + pageRequestDTO.getLink();
+            return "redirect:/table/modify?ano=" + accountDTO.getAno();
         }
 
         try {
