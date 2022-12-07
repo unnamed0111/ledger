@@ -3,6 +3,32 @@
     display: block;
 }
 
-.error {
-    color: red;
+.account-table {
+    width: 100%;
+}
+
+.account-table > thead th {
+    line-height: 40px;
+    border-bottom: 1px solid rgba(1, 1, 1, 0.15);
+}
+
+.account-table .col-date { width: 14%; }
+.account-table .col-title { width: 25%; }
+.account-table .col-price { width: 15%; }
+.account-table .col-amount { width: 15%; }
+.account-table .col-totalPrice { width: 20%; }
+.account-table .col-writer { width: 11%; }
+
+.account-table .summary td {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+
+    line-height: 50px;
+    text-indent: 10px;
+}
+.account-table .summary td:first-child { border-radius: 26px 0 0 26px; }
+.account-table .summary td:last-child {
+    border-radius: 0 26px 26px 0;
+    border-right: 1px solid black;
 }

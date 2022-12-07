@@ -29,6 +29,7 @@ public class TableController {
     public void list(PageRequestDTO pageRequestDTO, Model model, AccountDTO accountDTO) {
         log.info("........................GET ACCOUNT LIST........................");
 
+        // 나중에 /register 를 REST API 형태로 분리하면 없애기
         if(model.containsAttribute("accountDTOBindingResult")) {
             model.addAttribute(
                     "org.springframework.validation.BindingResult.accountDTO",
@@ -43,6 +44,7 @@ public class TableController {
         model.addAttribute("totalPrice", totalPrice);
     }
 
+    // 나중에 list 페이지에 의존하지 않도록 REST API 형태로 분리하기
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/register")
     public String register(@Valid AccountDTO accountDTO,
@@ -82,21 +84,12 @@ public class TableController {
     }
 
     @GetMapping("/modify")
-    public void modifyGet(@RequestParam(name = "ano", required = true) Long ano, PageRequestDTO pageRequestDTO, AccountDTO accountDTO, Model model) {
+    public void modifyGet(@RequestParam(name = "ano", required = true) Long ano, PageRequestDTO pageRequestDTO, Model model) {
         log.info("...........................GET MODIFY...........................");
 
-        if(model.containsAttribute("accountDTOBindingResult")) {
-            log.info("accountDTO is!!!");
+        AccountDTO accountDTO = accountService.get(ano);
 
-            model.addAttribute(
-                    "org.springframework.validation.BindingResult.accountDTO",
-                    model.asMap().get("accountDTOBindingResult")
-            );
-        } else {
-            accountDTO = accountService.get(ano);
-        }
-
-        model.addAttribute("dto", accountDTO);
+        model.addAttribute(accountDTO);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -105,7 +98,8 @@ public class TableController {
                          BindingResult bindingResult,
                          PageRequestDTO pageRequestDTO,
                          Principal principal,
-                         RedirectAttributes redirectAttributes) {
+                         RedirectAttributes redirectAttributes,
+                         Model model) {
         log.info("...........................POST MODIFY...........................");
         log.info("USER NAME : " + principal.getName());
 
@@ -113,12 +107,11 @@ public class TableController {
 
         if(bindingResult.hasErrors()) {
             log.info(".................HAS ERRORS.................");
+            log.info(bindingResult);
 
-            redirectAttributes.addFlashAttribute(pageRequestDTO);
-            redirectAttributes.addFlashAttribute(accountDTO);
-            redirectAttributes.addFlashAttribute("accountDTOBindingResult", bindingResult);
+            model.addAttribute(accountDTO);
 
-            return "redirect:/table/modify?ano=" + accountDTO.getAno();
+            return "table/modify";
         }
 
         try {

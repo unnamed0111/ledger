@@ -7,16 +7,20 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/modify.css}"></th:block>
 
 <div layout:fragment="content">
-    <form th:action="@{/table/modify}" th:object="${dto}" method="post">
-        <input type="hidden" name="ano" th:value="${dto.ano}">
-        <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}" name="date">
-        <p th:if="${#fields.hasErrors('date')}">날짜형식을 올바르게 입력하세요</p>
-        <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}" name="title">
-        <label for="content">내용</label><textarea id="content" name="content">[[${dto.content}]]</textarea>
-        <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}" name="price">
-        <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}" name="amount">
-        <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}" name="snp">
-        <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}" name="writer" readonly>
+    <form th:action="@{/table/modify}" th:object="${accountDTO}" method="post">
+        <input type="hidden" name="ano" th:field="*{ano}">
+        <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(accountDTO.date, 'yyyy-MM-dd')}" name="date">
+        <p th:if="${#fields.hasErrors('date')}" th:errors="*{date}" th:errorclass="error"/>
+        <label for="title">제목</label><input id="title" th:field="*{title}">
+        <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}" th:errorclass="error"/>
+        <label for="content">내용</label><textarea id="content" name="content">[[*{content}]]</textarea>
+        <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" th:errorclass="error"/>
+        <label for="price">단가</label><input id="price" type="number" step="any" th:value="*{price}" name="price">
+        <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" th:errorclass="error"/>
+        <label for="amount">수량</label><input id="amount" th:field="*{amount}" min="1">
+        <p th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}" th:errorclass="error"/>
+        <label for="snp">매출/지출</label><input id="snp" th:field="*{snp}">
+        <label for="writer">작성자</label><input id="writer" th:field="*{writer}" readonly>
         <button type="submit">수정</button>
         <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
     </form>

@@ -1,1 +1,59 @@
 @import "reset.css";
+
+.error {
+    color: red;
+}
+
+.main-size > * {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 10px 0;
+}
+
+.main-title {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.user-info {
+    padding: 40px 0 10px;
+    line-height: 20px;
+}
+
+.user-info .username {
+    font-weight: bold;
+}
+
+.user-info > p {
+    display: inline;
+}
+
+.login-btn {
+    text-decoration: none;
+    color: black;
+    display: inline-block;
+    margin-left: 20px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.login-btn:hover {
+    background: dimgrey;
+    border-color: dimgrey;
+}
+
+.main {
+    min-height: 760px;
+    padding: 20px 0;
+}
+
+.footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    height: 200px;
+    text-align: center;
+}

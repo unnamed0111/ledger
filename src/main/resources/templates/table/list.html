@@ -8,19 +8,19 @@
 
 <div layout:fragment="content">
     <!-- 매입/출 목록 -->
-    <table>
+    <table class="account-table">
         <thead>
         <tr>
-            <th>날짜</th>
-            <th>제목</th>
-            <th>단가</th>
-            <th>수량</th>
-            <th>총 금액</th>
-            <th>작성자</th>
+            <th class="col-date">날짜</th>
+            <th class="col-title">제목</th>
+            <th class="col-price">단가</th>
+            <th class="col-amount">수량</th>
+            <th class="col-totalPrice">총 금액</th>
+            <th class="col-writer">작성자</th>
         </tr>
         </thead>
 
-        <tbody>
+        <tbody class="account-register-form">
         <tr th:each="dto:${responseDTO.dtoList}">
             <td>[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
             <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}">| [[${dto.replyCount}]] |</span></td>
@@ -53,17 +53,16 @@
         </tr>
         </tbody>
 
-        <tfoot>
+        <tfoot class="summary">
         <tr th:with="totalSalesPrice = ${totalPrice['totalSalesPrice']}, totalPurchasePrice = ${totalPrice['totalPurchasePrice']}">
             <td colspan="1">매출 : [[${totalSalesPrice}]]</td>
             <td colspan="1">지출 : [[${totalPurchasePrice}]]</td>
             <td colspan="4">수익(매출 - 지출) : [[${#numbers.formatDecimal(totalSalesPrice - totalPurchasePrice,1,2)}]]</td>
-
         </tr>
         </tfoot>
     </table>
     <!-- 페이징 -->
-    <ul th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
+    <ul class="pagination" th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
         <th:block th:if="${responseDTO.prev}">
         <!-- 이전 버튼 -->
         <li >
