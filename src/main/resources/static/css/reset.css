@@ -41,3 +41,13 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+.hidden {
+    position: absolute;
+    left: -9999px;
+}
+
+/* 변수 설정 */
+:root {
+    --line-color: rgba(0, 0, 0, 0.15);
+}

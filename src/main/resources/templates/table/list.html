@@ -8,7 +8,9 @@
 
 <div layout:fragment="content">
     <!-- 매입/출 목록 -->
-    <table class="account-table">
+    <form th:action="@{/table/register}" th:object="${accountDTO}" method="post">
+        <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
+        <table class="account-table">
         <thead>
         <tr>
             <th class="col-date">날짜</th>
@@ -20,7 +22,7 @@
         </tr>
         </thead>
 
-        <tbody class="account-register-form">
+        <tbody class="main-table">
         <tr th:each="dto:${responseDTO.dtoList}">
             <td>[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
             <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}">| [[${dto.replyCount}]] |</span></td>
@@ -29,62 +31,111 @@
             <td th:class="${dto.snp ? 'purchase' : 'sales'}">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
             <td>[[${dto.writer}]]</td>
         </tr>
-        <tr th:if="${#authentication.principal != 'anonymousUser'}">
-            <td colspan="6">
-                <form th:action="@{/table/register}" th:object="${accountDTO}" method="post" class="register-form">
-                    <!-- 페이지 정보 전달 -->
-                    <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
-
-                    <label for="date">날짜</label><input th:field="*{date}" id="date" type="date" name="date">
-                    <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
-                    <label for="title">제목</label><input th:field="*{title}" id="title" type="text" name="title">
-                    <p th:if="${#fields.hasErrors('title')}" th:errorclass="error" th:errors="*{title}"/>
-                    <label for="content">내용</label><textarea th:field="*{content}" id="content" name="content"></textarea>
-                    <p th:if="${#fields.hasErrors('content')}" th:errorclass="error" th:errors="*{content}"/>
-                    <label for="price">단가</label><input th:field="*{price}" id="price" type="number" step="any" name="price">
-                    <p th:if="${#fields.hasErrors('price')}" th:errorclass="error" th:errors="*{price}"/>
-                    <label for="amount">수량</label><input th:field="*{amount}" id="amount" type="number" min="1" name="amount">
-                    <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
-                    <label for="snp">매출/지출</label><input th:field="*{snp}" id="snp" type="checkbox" name="snp">
-                    <label for="writer">작성자</label><input id="writer" type="text" name="writer" readonly th:value="${#authentication.principal.username}">
-                    <button type="submit">등록</button>
-                </form>
-            </td>
-        </tr>
         </tbody>
 
-        <tfoot class="summary">
-        <tr th:with="totalSalesPrice = ${totalPrice['totalSalesPrice']}, totalPurchasePrice = ${totalPrice['totalPurchasePrice']}">
+        <tfoot>
+        <tr class="account-register-header" th:if="${#authentication.principal != 'anonymousUser'}">
+            <!-- 페이지 정보 전달 -->
+            <td>
+                <input th:field="*{date}" id="date" type="date" name="date">
+                <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
+            </td>
+            <td>
+                <input th:field="*{title}" id="title" type="text" name="title">
+                <p th:if="${#fields.hasErrors('title')}" th:errorclass="error" th:errors="*{title}"/>
+            </td>
+            <td>
+                <input th:field="*{price}" id="price" onchange="calcTotalPrice()" type="number" min="0" step="any" name="price">
+                <p th:if="${#fields.hasErrors('price')}" th:errorclass="error" th:errors="*{price}"/>
+            </td>
+            <td>
+                <input th:field="*{amount}" id="amount" onchange="calcTotalPrice()" type="number" min="1" name="amount">
+                <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
+            </td>
+            <td>
+                <input id="totalPrice" type="text" readonly>
+                <label for="snp" class="check-sales">매출(+)</label>
+                <input class="hidden" id="snp" onchange="setSalesPurchaseBtnSwap()" type="checkbox" checked="on" name="snp">
+            </td>
+            <td>
+                <input id="writer" type="text" name="writer" readonly th:value="${#authentication.principal.username}">
+            </td>
+        </tr>
+        <tr class="account-register-body">
+            <td colspan="6">
+                <label style="display:block;" for="content">내용</label>
+                <textarea th:field="*{content}" id="content" name="content"></textarea>
+                <p th:if="${#fields.hasErrors('content')}" th:errorclass="error" th:errors="*{content}"/>
+            </td>
+        </tr>
+        <tr class="account-register-footer">
+            <td>
+                <button type="submit">등록</button>
+            </td>
+        </tr>
+        <!-- 페이징 -->
+        <tr>
+            <td colspan="6">
+                <!-- 페이징 -->
+                <ul class="pagination" th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
+                    <th:block th:if="${responseDTO.prev}">
+                        <!-- 이전 버튼 -->
+                        <li >
+                            <a th:href="|${link}&page=${responseDTO.start - 1}|">이전</a>
+                        </li>
+                    </th:block>
+
+                    <th:block th:if="${responseDTO.total > 0}">
+                        <!-- 페이지 번호 버튼 -->
+                        <li th:each="i:${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                            <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}|">[[${i}]]</a>
+                        </li>
+                    </th:block>
+
+                    <th:block th:if="${responseDTO.next}">
+                        <!-- 다음 버튼 -->
+                        <li >
+                            <a th:href="|${link}&page=${responseDTO.end + 1}|">다음</a>
+                        </li>
+                    </th:block>
+                </ul>
+            </td>
+        </tr>
+
+        <tr class="summary" th:with="totalSalesPrice = ${totalPrice['totalSalesPrice']}, totalPurchasePrice = ${totalPrice['totalPurchasePrice']}">
             <td colspan="1">매출 : [[${totalSalesPrice}]]</td>
             <td colspan="1">지출 : [[${totalPurchasePrice}]]</td>
             <td colspan="4">수익(매출 - 지출) : [[${#numbers.formatDecimal(totalSalesPrice - totalPurchasePrice,1,2)}]]</td>
         </tr>
         </tfoot>
     </table>
-    <!-- 페이징 -->
-    <ul class="pagination" th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
-        <th:block th:if="${responseDTO.prev}">
-        <!-- 이전 버튼 -->
-        <li >
-            <a th:href="|${link}&page=${responseDTO.start - 1}|">이전</a>
-        </li>
-        </th:block>
-
-        <th:block th:if="${responseDTO.total > 0}">
-        <!-- 페이지 번호 버튼 -->
-        <li th:each="i:${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-            <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}|">[[${i}]]</a>
-        </li>
-        </th:block>
-
-        <th:block th:if="${responseDTO.next}">
-        <!-- 다음 버튼 -->
-        <li >
-            <a th:href="|${link}&page=${responseDTO.end + 1}|">다음</a>
-        </li>
-        </th:block>
-    </ul>
-
-    <div th:text="${bindingResult}"></div>
+    </form>
 </div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const priceInput = document.getElementById("price");
+    const amountInput = document.getElementById("amount");
+    const totalPriceInput = document.getElementById("totalPrice");
+    const snpBtn = document.getElementById("snp");
+    const snpLabel = document.querySelector("label[for='snp']");
+
+    function calcTotalPrice() {
+        const price = Number.parseFloat(priceInput.value);
+        const amount = Number.parseInt(amountInput.value);
+
+        totalPriceInput.value = price * amount;
+    }
+
+    function setSalesPurchaseBtnSwap() {
+        console.log(snp.checked);
+
+        if(!snp.checked) {
+            snpLabel.innerText = "지출(-)";
+            snpLabel.setAttribute("class", "check-purchase");
+        } else {
+            snpLabel.innerText = "매출(+)";
+            snpLabel.setAttribute("class", "check-sales");
+        }
+    }
+</script>
 </html>

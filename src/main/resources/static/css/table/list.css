@@ -1,28 +1,73 @@
-.register-form > input,
-.register-form > textarea {
-    display: block;
-}
-
 .account-table {
     width: 100%;
+    border-collapse: separate;
 }
 
 .account-table > thead th {
     line-height: 40px;
-    border-bottom: 1px solid rgba(1, 1, 1, 0.15);
+    border-bottom: 1px solid var(--line-color);
 }
 
-.account-table .col-date { width: 14%; }
-.account-table .col-title { width: 25%; }
+.account-table .col-date { width: 12%; }
+.account-table .col-title { width: 28%; }
 .account-table .col-price { width: 15%; }
 .account-table .col-amount { width: 15%; }
 .account-table .col-totalPrice { width: 20%; }
-.account-table .col-writer { width: 11%; }
+.account-table .col-writer { width: 10%; }
+
+
+.account-table .main-table > tr:not(:last-child) > td {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line-color);
+    border-style: dashed;
+}
+.account-table .main-table > tr:not(:last-child):hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+.account-table .account-register-header td {
+    border-top: 1px solid var(--line-color);
+}
+.account-table .account-register-header td:not(:last-child) {
+    border-right: 1px solid var(--line-color);
+}
+.account-table .account-register-header td * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: none;
+    line-height: 20px;
+    font-size: 14px;
+    display: block;
+}
+.account-table .account-register-header td *:not(label) {
+    width: 100%;
+}
+.account-table .account-register-header td:nth-child(5) { position: relative; }
+.account-table .account-register-header td:nth-child(5) label {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.check-sales {
+    background: red;
+}
+
+.check-purchase {
+    background: blue;
+}
+
+.account-table .account-register-body td {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: var(--line-color);
+}
 
 .account-table .summary td {
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-color: var(--line-color);
 
     line-height: 50px;
     text-indent: 10px;
@@ -30,5 +75,5 @@
 .account-table .summary td:first-child { border-radius: 26px 0 0 26px; }
 .account-table .summary td:last-child {
     border-radius: 0 26px 26px 0;
-    border-right: 1px solid black;
+    border-right: 1px solid var(--line-color);
 }
