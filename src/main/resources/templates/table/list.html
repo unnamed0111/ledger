@@ -28,7 +28,7 @@
             <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}">| [[${dto.replyCount}]] |</span></td>
             <td>[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
             <td>[[${dto.amount}]]</td>
-            <td th:class="${dto.snp ? 'purchase' : 'sales'}">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
+            <td th:class="${dto.snp ? 'sales' : 'purchase'}">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
             <td>[[${dto.writer}]]</td>
         </tr>
         </tbody>
@@ -41,19 +41,19 @@
                 <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
             </td>
             <td>
-                <input th:field="*{title}" id="title" type="text" name="title">
+                <input th:field="*{title}" id="title" type="text" name="title" placeholder="제목을 입력하세요">
                 <p th:if="${#fields.hasErrors('title')}" th:errorclass="error" th:errors="*{title}"/>
             </td>
             <td>
-                <input th:field="*{price}" id="price" onchange="calcTotalPrice()" type="number" min="0" step="any" name="price">
+                <input th:field="*{price}" id="price" onchange="calcTotalPrice()" type="number" min="0" step="any" name="price" placeholder="단가를 입력하세요">
                 <p th:if="${#fields.hasErrors('price')}" th:errorclass="error" th:errors="*{price}"/>
             </td>
             <td>
-                <input th:field="*{amount}" id="amount" onchange="calcTotalPrice()" type="number" min="1" name="amount">
+                <input th:field="*{amount}" id="amount" onchange="calcTotalPrice()" type="number" min="1" name="amount" placeholder="수량을 입력하세요">
                 <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
             </td>
             <td>
-                <input id="totalPrice" type="text" readonly>
+                <input class="sales" id="totalPrice" type="text" readonly>
                 <label for="snp" class="check-sales">매출(+)</label>
                 <input class="hidden" id="snp" onchange="setSalesPurchaseBtnSwap()" type="checkbox" checked="on" name="snp">
             </td>
@@ -63,18 +63,18 @@
         </tr>
         <tr class="account-register-body">
             <td colspan="6">
-                <label style="display:block;" for="content">내용</label>
-                <textarea th:field="*{content}" id="content" name="content"></textarea>
+                <label style="display:block; padding-bottom: 10px;" for="content">내용</label>
+                <textarea class="full-width" style="resize: none" th:field="*{content}" id="content" name="content" placeholder="내용을 입력하세요..."></textarea>
                 <p th:if="${#fields.hasErrors('content')}" th:errorclass="error" th:errors="*{content}"/>
             </td>
         </tr>
         <tr class="account-register-footer">
-            <td>
+            <td colspan="6">
                 <button type="submit">등록</button>
             </td>
         </tr>
         <!-- 페이징 -->
-        <tr>
+        <tr class="account-pagination">
             <td colspan="6">
                 <!-- 페이징 -->
                 <ul class="pagination" th:with="link=@{/table/list(size = ${pageRequestDTO.size})}">
@@ -116,25 +116,26 @@
     const priceInput = document.getElementById("price");
     const amountInput = document.getElementById("amount");
     const totalPriceInput = document.getElementById("totalPrice");
-    const snpBtn = document.getElementById("snp");
     const snpLabel = document.querySelector("label[for='snp']");
 
     function calcTotalPrice() {
         const price = Number.parseFloat(priceInput.value);
         const amount = Number.parseInt(amountInput.value);
 
+        if(isNaN(price) || isNaN(amount)) return;
+
         totalPriceInput.value = price * amount;
     }
 
     function setSalesPurchaseBtnSwap() {
-        console.log(snp.checked);
-
         if(!snp.checked) {
             snpLabel.innerText = "지출(-)";
             snpLabel.setAttribute("class", "check-purchase");
+            totalPriceInput.setAttribute("class", "purchase");
         } else {
             snpLabel.innerText = "매출(+)";
             snpLabel.setAttribute("class", "check-sales");
+            totalPriceInput.setAttribute("class", "sales")
         }
     }
 </script>

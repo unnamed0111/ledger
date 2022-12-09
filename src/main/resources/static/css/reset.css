@@ -47,6 +47,13 @@ table {
     left: -9999px;
 }
 
+.full-width {
+    width: 100%;
+}
+
+.sales { color: red; }
+.purchase { color: blue; }
+
 /* 변수 설정 */
 :root {
     --line-color: rgba(0, 0, 0, 0.15);

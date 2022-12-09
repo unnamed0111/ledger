@@ -15,30 +15,32 @@
 .account-table .col-totalPrice { width: 20%; }
 .account-table .col-writer { width: 10%; }
 
-
-.account-table .main-table > tr:not(:last-child) > td {
+.account-table .main-table > tr > td {
     padding: 10px 0;
+}
+.account-table .main-table > tr:not(:last-child) > td {
     border-bottom: 1px solid var(--line-color);
     border-style: dashed;
 }
-.account-table .main-table > tr:not(:last-child):hover {
+.account-table .main-table > tr:hover {
     background: rgba(0, 0, 0, 0.05);
 }
-.account-table .account-register-header td {
-    border-top: 1px solid var(--line-color);
-}
-.account-table .account-register-header td:not(:last-child) {
-    border-right: 1px solid var(--line-color);
-}
+
 .account-table .account-register-header td * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
     border: none;
+    border-top: 1px solid var(--line-color);
     line-height: 20px;
+    height: 20px;
     font-size: 14px;
     display: block;
 }
+.account-register-header td {
+    padding-top: 30px;
+}
+
 .account-table .account-register-header td *:not(label) {
     width: 100%;
 }
@@ -46,7 +48,7 @@
 .account-table .account-register-header td:nth-child(5) label {
     position: absolute;
     right: 0;
-    top: 0;
+    bottom: 0;
 }
 
 .check-sales {
@@ -59,8 +61,53 @@
 
 .account-table .account-register-body td {
     border-top: 1px solid;
-    border-bottom: 1px solid;
     border-color: var(--line-color);
+    padding: 10px;
+}
+
+.account-table .account-register-body td textarea {
+    border: none;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    height: 300px;
+}
+
+.account-table .account-register-footer td {
+    padding: 0 10px 10px;
+    text-align: right;
+}
+.account-table .account-register-footer td button {
+    padding: 10px 20px;
+    margin: 0;
+    border: none;
+    border-radius: 10px;
+    background: #008cff;
+}
+
+.account-table .account-pagination td {
+    padding: 10px 0;
+}
+
+.pagination {
+    overflow: hidden;
+    text-align: center;
+}
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination li a {
+    display: block;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--line-color);
+    text-align: center;
 }
 
 .account-table .summary td {
