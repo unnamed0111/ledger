@@ -47,6 +47,11 @@ table {
     left: -9999px;
 }
 
+.wide-size {
+    width: 1200px;
+    margin: 0 auto;
+}
+
 .full-width {
     width: 100%;
 }

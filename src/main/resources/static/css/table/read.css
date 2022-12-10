@@ -1,0 +1,64 @@
+.account-form:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+.account-form > * {
+    display: block;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 0;
+    padding: 10px 5px;
+    margin: 0;
+    line-height: 20px;
+    float: left;
+}
+
+.account-form > label {
+    width: 100px;
+    border-radius: 10px 0 0 10px;
+    background: var(--line-color);
+}
+
+.account-form > *:not(label) {
+    width: calc(100% - 100px);
+    border-radius: 0 10px 10px 0;
+    border-left: none;
+}
+
+.account-form > label[for='content'] {
+    line-height: 300px;
+    height: 300px;
+}
+.account-form > #content {
+    height: 300px;
+    resize: none;
+}
+
+.account-form > #snp {
+    height: 42px;
+}
+
+.user-form:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+.user-form > * {
+    display: block;
+    border: 1px solid var(--line-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 0;
+    line-height: 20px;
+    float: left;
+}
+
+.user-form > *:not(:first-child) {
+    margin-right: 10px;
+}
+
+.user-form > button {
+    padding-left: 20px;
+    padding-right: 20px;
+}

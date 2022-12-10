@@ -7,16 +7,19 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/read.css}"></th:block>
 
 <div layout:fragment="content">
-    <section>
-        <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}">
-        <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}">
-        <label for="content">내용</label><textarea id="content">[[${dto.content}]]</textarea>
-        <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}">
-        <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}">
-        <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}">
-        <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}">
+    <section class="wide-size">
+        <div class="account-form">
+            <label for="date">날짜</label><input id="date" type="date" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}">
+            <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}">
+            <label for="content">내용</label><textarea id="content">[[${dto.content}]]</textarea>
+            <label for="price">단가</label><input id="price" type="number" step="any" th:value="${dto.price}">
+            <label for="amount">수량</label><input id="amount" type="number" min="1" th:value="${dto.amount}">
+            <label for="snp">매출/지출</label><input id="snp" type="checkbox" th:checked="${dto.snp}">
+            <label for="totalPrice">총 금액</label><input type="text" id="totalPrice">
+            <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}">
+        </div>
 
-        <form th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
+        <form class="user-form" th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
             <input type="hidden" name="ano" th:value="${dto.ano}">
             <a th:href="|@{/table/list}?${pageRequestDTO.link}|">목록</a>
             <th:block th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
@@ -26,7 +29,7 @@
         </form>
     </section>
 
-    <section>
+    <section class="wide-size">
         <form id="replyForm" action="" th:if="${#authentication.principal != 'anonymousUser'}" data-mode="post">
             <input type="hidden" th:value="${dto.ano}">
             <label for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
@@ -41,8 +44,34 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/reply.js"></script>
-</div>
+    <script>
+        const priceInput = document.getElementById("price");
+        const amountInput = document.getElementById("amount");
+        const totalPriceInput = document.getElementById("totalPrice");
+        const snpLabel = document.querySelector("label[for='snp']");
 
+        function calcTotalPrice() {
+            const price = Number.parseFloat(priceInput.value);
+            const amount = Number.parseInt(amountInput.value);
+
+            if(isNaN(price) || isNaN(amount)) return;
+
+            totalPriceInput.value = price * amount;
+        }
+
+        function setSalesPurchaseBtnSwap() {
+            if(!snp.checked) {
+                snpLabel.innerText = "지출(-)";
+                snpLabel.setAttribute("class", "check-purchase");
+                totalPriceInput.setAttribute("class", "purchase");
+            } else {
+                snpLabel.innerText = "매출(+)";
+                snpLabel.setAttribute("class", "check-sales");
+                totalPriceInput.setAttribute("class", "sales")
+            }
+        }
+    </script>
+</div>
 <script layout:fragment="script" th:inline="javascript">
     console.log(errors);
 
