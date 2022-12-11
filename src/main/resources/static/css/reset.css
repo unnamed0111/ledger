@@ -56,6 +56,9 @@ table {
     width: 100%;
 }
 
+.btn-sales { background-color: #ff5050; }
+.btn-purchase { background-color: #5151ff; }
+
 .sales { color: red; }
 .purchase { color: blue; }
 

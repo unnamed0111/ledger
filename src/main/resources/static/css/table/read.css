@@ -9,18 +9,21 @@
     border: 1px solid var(--line-color);
     border-radius: 0;
     padding: 10px 5px;
-    margin: 0;
+    margin: 0 0 10px;
     line-height: 20px;
     float: left;
 }
+
 
 .account-form > label {
     width: 100px;
     border-radius: 10px 0 0 10px;
     background: var(--line-color);
+    text-align: center;
 }
 
-.account-form > *:not(label) {
+.account-form > input,
+.account-form > textarea {
     width: calc(100% - 100px);
     border-radius: 0 10px 10px 0;
     border-left: none;

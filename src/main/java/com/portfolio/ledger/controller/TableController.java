@@ -102,6 +102,7 @@ public class TableController {
                          Model model) {
         log.info("...........................POST MODIFY...........................");
         log.info("USER NAME : " + principal.getName());
+        log.info("AccountDTO : " + accountDTO);
 
         accountDTO.setWriter(principal.getName());
 

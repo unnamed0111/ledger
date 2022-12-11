@@ -33,8 +33,8 @@
         </tr>
         </tbody>
 
-        <tfoot>
-        <tr class="account-register-header" th:if="${#authentication.principal != 'anonymousUser'}">
+        <tfoot th:with="isUser = ${#authentication.principal != 'anonymousUser'}">
+        <tr class="account-register-header" th:if="${isUser}">
             <!-- 페이지 정보 전달 -->
             <td>
                 <input th:field="*{date}" id="date" type="date" name="date">
@@ -61,14 +61,14 @@
                 <input id="writer" type="text" name="writer" readonly th:value="${#authentication.principal.username}">
             </td>
         </tr>
-        <tr class="account-register-body">
+        <tr class="account-register-body" th:if="${isUser}">
             <td colspan="6">
                 <label style="display:block; padding-bottom: 10px;" for="content">내용</label>
                 <textarea class="full-width" style="resize: none" th:field="*{content}" id="content" name="content" placeholder="내용을 입력하세요..."></textarea>
                 <p th:if="${#fields.hasErrors('content')}" th:errorclass="error" th:errors="*{content}"/>
             </td>
         </tr>
-        <tr class="account-register-footer">
+        <tr class="account-register-footer" th:if="${isUser}">
             <td colspan="6">
                 <button type="submit">등록</button>
             </td>

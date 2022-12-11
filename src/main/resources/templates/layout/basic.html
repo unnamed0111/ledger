@@ -14,7 +14,9 @@
 
 </div>
   <header class="header main-size">
-    <h1 class="main-title">매출 관리 프로그램</h1>
+    <h1 class="main-title">
+      <a href="/table/list">매출 관리 프로그램</a>
+    </h1>
     <div class="user-info">
       <p th:if="${#authentication.principal != 'anonymousUser'}"><span class="username">[[${#authentication.principal.username}]]</span> 님 안녕하세요.</p>
       <th:block th:with="loginCheck = ${#authentication.principal != 'anonymousUser'}">

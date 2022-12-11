@@ -1,0 +1,72 @@
+.account-form:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+.account-form > * {
+    display: block;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 0;
+    padding: 10px 5px;
+    margin: 0 0 10px;
+    line-height: 20px;
+    float: left;
+}
+
+.account-form > label {
+    width: 100px;
+    border-radius: 10px 0 0 10px;
+    background: var(--line-color);
+    text-align: center;
+}
+
+.account-form > input,
+.account-form > textarea {
+    width: calc(100% - 100px);
+    border-radius: 0 10px 10px 0;
+    border-left: none;
+}
+
+.account-form > #date {
+    padding: 9px 10px;
+}
+
+.account-form > .totalPrice-form {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.account-form > .totalPrice-form > * {
+    display: block;
+    margin: 0;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    box-sizing: border-box;
+}
+
+.account-form > .totalPrice-form > a {
+    width: 50px;
+    border-right: 1px solid var(--line-color);
+    /*font-size: 0.75em;*/
+    text-align: center;
+    cursor: pointer;
+}
+
+.account-form > .totalPrice-form > input {
+    width: calc(100% - 100px);
+    padding: 0 5px;
+    border: none;
+}
+
+.account-form > label[for='content'] {
+    line-height: 300px;
+    height: 300px;
+}
+.account-form > #content {
+    height: 300px;
+    resize: none;
+}
