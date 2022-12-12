@@ -47,6 +47,11 @@ table {
     left: -9999px;
 }
 
+.small-size {
+    width: 400px;
+    margin: 0 auto;
+}
+
 .wide-size {
     width: 1200px;
     margin: 0 auto;
@@ -61,6 +66,12 @@ table {
 
 .sales { color: red; }
 .purchase { color: blue; }
+
+.no-style {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+}
 
 /* 변수 설정 */
 :root {

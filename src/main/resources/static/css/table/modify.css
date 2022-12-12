@@ -70,3 +70,12 @@
     height: 300px;
     resize: none;
 }
+
+.account-form > button,
+.account-form > button + a {
+    float: right;
+    width: 100px;
+    border-radius: 5px;
+    margin-left: 10px;
+    text-align: center;
+}

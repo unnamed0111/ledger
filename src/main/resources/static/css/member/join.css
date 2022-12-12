@@ -1,0 +1,36 @@
+.join-form:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.join-form > * {
+    float: left;
+    display: block;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 0;
+    line-height: 20px;
+    padding: 10px 5px;
+    margin-bottom: 10px;
+}
+
+.join-form > label {
+    width: 100px;
+    border-radius: 10px 0 0 10px;
+    background-color: var(--line-color);
+    text-align: center;
+}
+
+.join-form > input {
+    width: calc(100% - 100px);
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+}
+
+.join-form > button {
+    width: 100%;
+    line-height: 30px;
+    float: right;
+    border-radius: 10px;
+}

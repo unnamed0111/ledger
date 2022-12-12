@@ -13,23 +13,23 @@
         <table class="account-table">
         <thead>
         <tr>
-            <th class="col-date">날짜</th>
-            <th class="col-title">제목</th>
-            <th class="col-price">단가</th>
-            <th class="col-amount">수량</th>
-            <th class="col-totalPrice">총 금액</th>
-            <th class="col-writer">작성자</th>
+            <th class="th-date">날짜</th>
+            <th class="th-title">제목</th>
+            <th class="th-price">단가</th>
+            <th class="th-amount">수량</th>
+            <th class="th-totalPrice">총 금액</th>
+            <th class="th-writer">작성자</th>
         </tr>
         </thead>
 
         <tbody class="main-table">
         <tr th:each="dto:${responseDTO.dtoList}">
-            <td>[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
-            <td><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}">| [[${dto.replyCount}]] |</span></td>
-            <td>[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
-            <td>[[${dto.amount}]]</td>
-            <td th:class="${dto.snp ? 'sales' : 'purchase'}">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
-            <td>[[${dto.writer}]]</td>
+            <td class="col-date">[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
+            <td class="col-title"><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}" th:text="|${' ['}${dto.replyCount}${']'}|"></span></td>
+            <td class="col-price">[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
+            <td class="col-amount">[[${dto.amount}]]</td>
+            <td th:class="|${dto.snp ? 'sales' : 'purchase'} col-totalPrice|">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
+            <td class="col-writer">[[${dto.writer}]]</td>
         </tr>
         </tbody>
 

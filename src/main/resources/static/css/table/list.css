@@ -8,12 +8,12 @@
     border-bottom: 1px solid var(--line-color);
 }
 
-.account-table .col-date { width: 12%; }
-.account-table .col-title { width: 28%; }
-.account-table .col-price { width: 15%; }
-.account-table .col-amount { width: 15%; }
-.account-table .col-totalPrice { width: 20%; }
-.account-table .col-writer { width: 10%; }
+.account-table .th-date { width: 12%; }
+.account-table .th-title { width: 28%; }
+.account-table .th-price { width: 15%; }
+.account-table .th-amount { width: 15%; }
+.account-table .th-totalPrice { width: 20%; }
+.account-table .th-writer { width: 10%; }
 
 .account-table .main-table > tr > td {
     padding: 10px 0;
@@ -25,6 +25,19 @@
 .account-table .main-table > tr:hover {
     background: rgba(0, 0, 0, 0.05);
 }
+
+.account-table .main-table .col-date,
+.account-table .main-table .col-writer {
+    text-align: center;
+}
+
+.account-table .main-table .col-title,
+.account-table .main-table .col-amount,
+.account-table .main-table .col-totalPrice,
+.account-table .main-table .col-price {
+    text-indent: 10px;
+}
+
 
 .account-table .account-register-header td * {
     box-sizing: border-box;
