@@ -35,9 +35,8 @@
 
     <section class="wide-size">
         <form id="replyForm" action="" th:if="${#authentication.principal != 'anonymousUser'}" data-mode="post">
-            <input type="hidden" th:value="${dto.ano}">
-            <label for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
-            <label for="replyContent">내용</label><textarea id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요"></textarea>
+            <label class="hidden" for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
+            <label class="hidden" for="replyContent">내용</label><textarea id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요"></textarea>
             <button id="replyRegisterBtn" type="button">등록</button>
         </form>
 
@@ -91,7 +90,7 @@
         let str = '';
 
         for(const dto of dtoList) {
-            str += `<li className="reply-item" data-rno="${dto.rno}">`;
+            str += `<li class="reply-item" data-rno="${dto.rno}">`;
             str += `
                 <input type="text" value="${dto.writer}" readonly>
                 <textarea type="text" readonly>${dto.content}</textarea>

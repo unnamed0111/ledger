@@ -71,10 +71,13 @@ package com.portfolio.ledger.dev;
 //    }
 //}
 
+import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.domain.Member;
 import com.portfolio.ledger.domain.MemberRole;
+import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.repository.MemberRepository;
+import com.portfolio.ledger.repository.ReplyRepository;
 import com.portfolio.ledger.service.AccountService;
 import lombok.Cleanup;
 import lombok.extern.log4j.Log4j2;
@@ -105,11 +108,15 @@ public class Initialize implements ApplicationRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createLoginTable();
         createUsers();
         createAccounts();
+        createReplies();
     }
     private void createLoginTable() throws Exception {
         log.info("............CREATE TABLE PERSISTENT FOR LOGINS............");
@@ -161,5 +168,23 @@ public class Initialize implements ApplicationRunner {
                 .build();
 
         accountService.register(accountDTO);
+    }
+
+    private void createReplies() {
+        log.info(".............................CREATE REPLIES.............................");
+
+        Account refAccount = Account.builder()
+                .ano(1L)
+                .build();
+
+        IntStream.rangeClosed(1, 5).forEach(i -> {
+            Reply reply = Reply.builder()
+                    .account(refAccount)
+                    .content("테스트 댓글..." + i)
+                    .writer("user" + i)
+                    .build();
+
+            replyRepository.save(reply);
+        });
     }
 }
