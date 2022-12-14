@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 public class CustomAdvice {
 
     @ExceptionHandler(Exception.class)
-    public String CommonExceptionHandler(Exception e, RedirectAttributes redirectAttributes) {
+    public String commonExceptionHandler(Exception e, RedirectAttributes redirectAttributes) {
         Map<String, String> errorMap = new HashMap<>();
 
         errorMap.put("errorType", "CommonException");
@@ -28,7 +28,7 @@ public class CustomAdvice {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public String NoSuchElementExceptionHandler(Exception e, RedirectAttributes redirectAttributes) {
+    public String noSuchElementExceptionHandler(Exception e, RedirectAttributes redirectAttributes) {
         Map<String, String> errorMap = new HashMap<>();
 
         errorMap.put("errorType", "NoSuchElement");
