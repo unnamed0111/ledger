@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO) {
-        Pageable pageable = pageRequestDTO.getPageable("ano");
+        Pageable pageable = pageRequestDTO.getPageable("regDate");
 
         Page<AccountDTO> result = accountRepository.searchList(pageable);
         List<AccountDTO> dtoList = result.getContent();
