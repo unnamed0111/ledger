@@ -123,7 +123,12 @@
     text-align: center;
 }
 
-.account-table .summary td {
+.summary-table {
+    width: 100%;
+    border-collapse: separate;
+}
+
+.summary-table .summary td {
     border-top: 1px solid;
     border-bottom: 1px solid;
     border-left: 1px solid;
@@ -132,8 +137,8 @@
     line-height: 50px;
     text-indent: 10px;
 }
-.account-table .summary td:first-child { border-radius: 26px 0 0 26px; }
-.account-table .summary td:last-child {
+.summary-table .summary td:first-child { border-radius: 26px 0 0 26px; }
+.summary-table .summary td:last-child {
     border-radius: 0 26px 26px 0;
     border-right: 1px solid var(--line-color);
 }

@@ -31,7 +31,7 @@
             <a id="purchaseBtn" th:class="${accountDTO.snp ? '' : 'btn-purchase'}">지출</a>
             <input id="totalPrice"
                    type="text"
-                   th:value="|${accountDTO.snp ? '+' : '-'}${#numbers.formatDecimal(accountDTO.totalPrice,1,2)}|"
+                   th:value="|${accountDTO.snp ? '+' : '-'}${#numbers.formatDecimal(accountDTO.totalPrice,0,'COMMA',2,'POINT')}|"
                    th:class="${accountDTO.snp ? 'sales' : 'purchase'}"
                    readonly>
             <input id="snp" type="hidden" th:field="*{snp}" name="snp">

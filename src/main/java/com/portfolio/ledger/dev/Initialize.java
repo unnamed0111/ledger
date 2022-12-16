@@ -157,17 +157,28 @@ public class Initialize implements ApplicationRunner {
     private void createAccounts() {
         log.info("..........................CREATE ACCOUNTS..........................");
 
-        AccountDTO accountDTO = AccountDTO.builder()
+        AccountDTO salesDTO = AccountDTO.builder()
                 .date(LocalDate.now())
-                .title("테스트 내역 1")
-                .content("테스트 내역입니다. 단가 100원 수량 100개")
+                .title("매출 내역 1")
+                .content("테스트 매출 내역입니다. 단가 100원 수량 100개")
                 .price(100.0)
                 .amount(100)
                 .writer("user1")
-                .snp(true)
+                .snp(AccountDTO.SYMBOL_SALES)
                 .build();
 
-        accountService.register(accountDTO);
+        AccountDTO purchaseDTO = AccountDTO.builder()
+                .date(LocalDate.now().minusDays(10))
+                .title("지출 내역 1")
+                .content("테스트 지출 내역입니다. 단가 322.22원 수량 40개")
+                .price(322.22)
+                .amount(40)
+                .writer("user2")
+                .snp(AccountDTO.SYMBOL_PURCHASE)
+                .build();
+
+        accountService.register(salesDTO);
+        accountService.register(purchaseDTO);
     }
 
     private void createReplies() {

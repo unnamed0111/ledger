@@ -26,9 +26,9 @@
         <tr th:each="dto:${responseDTO.dtoList}">
             <td class="col-date">[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
             <td class="col-title"><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}" th:text="|${' ['}${dto.replyCount}${']'}|"></span></td>
-            <td class="col-price">[[${#numbers.formatDecimal(dto.price,1,2)}]]</td>
+            <td class="col-price">[[${#numbers.formatDecimal(dto.price,0,'COMMA',2,'POINT')}]]</td>
             <td class="col-amount">[[${dto.amount}]]</td>
-            <td th:class="|${dto.snp ? 'sales' : 'purchase'} col-totalPrice|">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,1,2)}]]</td>
+            <td th:class="|${dto.snp ? 'sales' : 'purchase'} col-totalPrice|">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,0,'COMMA',2,'POINT')}]]</td>
             <td class="col-writer">[[${dto.writer}]]</td>
         </tr>
         </tbody>
@@ -101,14 +101,16 @@
                 </ul>
             </td>
         </tr>
-
-        <tr class="summary" th:with="totalSalesPrice = ${totalPrice['totalSalesPrice']}, totalPurchasePrice = ${totalPrice['totalPurchasePrice']}">
-            <td colspan="1">매출 : [[${totalSalesPrice}]]</td>
-            <td colspan="1">지출 : [[${totalPurchasePrice}]]</td>
-            <td colspan="4">수익(매출 - 지출) : [[${#numbers.formatDecimal(totalSalesPrice - totalPurchasePrice,1,2)}]]</td>
-        </tr>
         </tfoot>
-    </table>
+        </table>
+
+        <table class="summary-table">
+            <tr class="summary" th:with="totalSalesPrice = ${totalPrice['totalSalesPrice']}, totalPurchasePrice = ${totalPrice['totalPurchasePrice']}">
+                <td colspan="1">매출 : [[${#numbers.formatDecimal(totalSalesPrice,0,'COMMA',2,'POINT')}]]</td>
+                <td colspan="1">지출 : [[${#numbers.formatDecimal(totalPurchasePrice,0,'COMMA',2,'POINT')}]]</td>
+                <td colspan="4">수익(매출 - 지출) : [[${#numbers.formatDecimal(totalSalesPrice - totalPurchasePrice,0,'COMMA',2,'POINT')}]]</td>
+            </tr>
+        </table>
     </form>
 </div>
 
@@ -124,7 +126,7 @@
 
         if(isNaN(price) || isNaN(amount)) return;
 
-        totalPriceInput.value = price * amount;
+        totalPriceInput.value = (price * amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     function setSalesPurchaseBtnSwap() {

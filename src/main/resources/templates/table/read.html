@@ -16,7 +16,7 @@
             <label for="totalPrice">총 금액</label>
             <input  type="text"
             id="totalPrice"
-            th:value="|${dto.snp ? '+' : '-'}${#numbers.formatDecimal(dto.totalPrice,1,2)}|"
+            th:value="|${dto.snp ? '+' : '-'}${#numbers.formatDecimal(dto.totalPrice,0,'COMMA',2,'POINT')}|"
             th:class="${dto.snp ? 'sales' : 'purchase'}"
             readonly>
             <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}" readonly>
