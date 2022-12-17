@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,6 @@ import java.util.Map;
 public class PageRequestDTO {
     @Builder.Default // 빌드 세션 중에 필드를 채우지 않으면 자동으로 0, false, null 로 지정되기 때문에 기본값을 지정해줌
     private int page = 1;
-
     @Builder.Default
     private int size = 5;
 
