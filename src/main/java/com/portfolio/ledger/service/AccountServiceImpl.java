@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
     public PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO) {
         Pageable pageable = pageRequestDTO.getPageable("date");
 
-        Page<AccountDTO> result = accountRepository.searchList(pageable);
+        Page<AccountDTO> result = accountRepository.searchList(pageable, null);
         List<AccountDTO> dtoList = result.getContent();
 
         return PageResponseDTO.<AccountDTO>withAll()

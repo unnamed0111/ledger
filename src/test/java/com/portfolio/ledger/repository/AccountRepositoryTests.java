@@ -3,6 +3,7 @@ package com.portfolio.ledger.repository;
 import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.dto.AccountSearchDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,7 +88,7 @@ public class AccountRepositoryTests {
 
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by("ano").descending());
 
-        Page<AccountDTO> result = accountRepository.searchList(pageable);
+        Page<AccountDTO> result = accountRepository.searchList(pageable, null);
 
         long count = result.getTotalElements();
         List<AccountDTO> accountList = result.getContent();
@@ -133,7 +134,7 @@ public class AccountRepositoryTests {
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("ano").descending());
 
-        Page<AccountDTO> result = accountRepository.searchList(pageable);
+        Page<AccountDTO> result = accountRepository.searchList(pageable, null);
         result.getContent().forEach(accountDTO -> {
             log.info(accountDTO);
         });
@@ -149,5 +150,26 @@ public class AccountRepositoryTests {
 
         log.info("total sales price = " + df.format(result.get("totalSalesPrice")));
         log.info("total purchase price = " + df.format(result.get("totalPurchasePrice")));
+    }
+
+    @Test
+    public void testSearch() {
+        log.info(".................SEARCH TEST.................");
+
+        List<Account> list = accountRepository.findAll();
+        list.forEach(account -> log.info(account));
+
+        AccountSearchDTO searchDTO = AccountSearchDTO.builder()
+                .amountStart(70)
+                .dateStart(LocalDate.of(2022,10,1))
+                .build();
+
+        log.info(searchDTO);
+
+        Pageable pageable = PageRequest.of(0, 50, Sort.by("date").descending());
+        Page<AccountDTO> result = accountRepository.searchList(pageable, searchDTO);
+
+        log.info(".....................RESULT.....................");
+        result.getContent().forEach(accountDTO -> log.info(accountDTO));
     }
 }

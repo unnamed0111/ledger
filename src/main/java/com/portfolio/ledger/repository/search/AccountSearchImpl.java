@@ -4,6 +4,8 @@ import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.domain.QAccount;
 import com.portfolio.ledger.domain.QReply;
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.dto.AccountSearchDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
@@ -30,13 +32,65 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
     }
 
     @Override
-    public Page<AccountDTO> searchList(Pageable pageable) {
+    public Page<AccountDTO> searchList(Pageable pageable, AccountSearchDTO searchDTO) {
         QAccount    account = QAccount.account;
         QReply      reply   = QReply.reply;
 
         JPQLQuery<Account> query = from(account); // ... from account ...
-        query.leftJoin(reply).on(reply.account.eq(account));
 
+        // AccountSearchDTO 기반으로 검색할 내역 좁히기
+        if(searchDTO != null) {
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            // 날짜 시작
+            if(searchDTO.getDateStart() != null) {
+                booleanBuilder.and(account.date.goe(searchDTO.getDateStart()));
+            }
+
+            // 날짜 끝
+            if (searchDTO.getDateEnd() != null) {
+                booleanBuilder.and(account.date.loe(searchDTO.getDateEnd()));
+            }
+
+            // 제목 키워드 포함
+            if(searchDTO.getTitle() != null && searchDTO.getTitle().length() > 0) {
+                booleanBuilder.and(account.title.contains(searchDTO.getTitle()));
+            }
+
+            // 내용 키워드 포함
+            if(searchDTO.getContent() != null && searchDTO.getContent().length() > 0) {
+                booleanBuilder.and(account.content.contains(searchDTO.getContent()));
+            }
+
+            // 작성자 키워드 포함
+            if (searchDTO.getWriter() != null && searchDTO.getWriter().length() > 0) {
+                booleanBuilder.and(account.writer.contains(searchDTO.getWriter()));
+            }
+
+            // 수량 이상
+            if(searchDTO.getAmountStart() != null && searchDTO.getAmountStart() > 0) {
+                booleanBuilder.and(account.amount.goe(searchDTO.getAmountStart()));
+            }
+
+            // 수량 이하
+            if(searchDTO.getAmountEnd() != null && searchDTO.getAmountStart() > 0) {
+                booleanBuilder.and(account.amount.loe(searchDTO.getAmountEnd()));
+            }
+
+            // 가격 이상
+            if(searchDTO.getPriceStart() != null && searchDTO.getPriceStart() > 0) {
+                booleanBuilder.and(account.price.goe(searchDTO.getPriceStart()));
+            }
+
+            // 가격 이하
+            if (searchDTO.getPriceEnd() != null && searchDTO.getPriceEnd() > 0) {
+                booleanBuilder.and(account.price.loe(searchDTO.getPriceEnd()));
+            }
+
+            query.where(booleanBuilder);
+        }
+
+        query.leftJoin(reply).on(reply.account.eq(account));
         query.groupBy(account);
 
         JPQLQuery<AccountDTO> dtoQuery = query.select(
