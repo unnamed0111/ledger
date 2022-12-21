@@ -1,6 +1,7 @@
 package com.portfolio.ledger.controller;
 
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.dto.AccountSearchDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.service.AccountService;
@@ -26,7 +27,7 @@ public class TableController {
     private final AccountService accountService;
 
     @GetMapping("/list")
-    public void list(PageRequestDTO pageRequestDTO, Model model, AccountDTO accountDTO) {
+    public void list(PageRequestDTO pageRequestDTO, AccountSearchDTO searchDTO, Model model, AccountDTO accountDTO) {
         log.info("........................GET ACCOUNT LIST........................");
 
         // 나중에 /register 를 REST API 형태로 분리하면 없애기
@@ -37,7 +38,7 @@ public class TableController {
             );
         }
 
-        PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
+        PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO, searchDTO);
         Map<String, Double> totalPrice = accountService.getTotalPrice();
 
         model.addAttribute("responseDTO", responseDTO);
@@ -74,7 +75,7 @@ public class TableController {
     }
 
     @GetMapping("/read")
-    public void read(Long ano, PageRequestDTO pageRequestDTO, Model model) {
+    public void read(Long ano, PageRequestDTO pageRequestDTO, AccountSearchDTO searchDTO, Model model) {
         log.info("...........................GET READ...........................");
 
         AccountDTO accountDTO = accountService.get(ano);

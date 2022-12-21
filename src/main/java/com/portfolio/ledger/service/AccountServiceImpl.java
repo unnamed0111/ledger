@@ -2,6 +2,7 @@ package com.portfolio.ledger.service;
 
 import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.dto.AccountSearchDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.exception.NotOwnerException;
@@ -35,10 +36,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO) {
+    public PageResponseDTO<AccountDTO> getList(PageRequestDTO pageRequestDTO, AccountSearchDTO searchDTO) {
         Pageable pageable = pageRequestDTO.getPageable("date");
 
-        Page<AccountDTO> result = accountRepository.searchList(pageable, null);
+        Page<AccountDTO> result = accountRepository.searchList(pageable, searchDTO);
         List<AccountDTO> dtoList = result.getContent();
 
         return PageResponseDTO.<AccountDTO>withAll()

@@ -46,18 +46,6 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testGetList() {
-        log.info(".........................GET LIST.........................");
-
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build(); // 기본 page = 1, size = 5
-
-         PageResponseDTO<AccountDTO> responseDTO = accountService.getList(pageRequestDTO);
-
-//         responseDTO.getDtoList().forEach(accountDTO -> log.info(accountDTO));
-        log.info(responseDTO);
-    }
-
-    @Test
     public void testGetOne() {
         log.info(".........................GET.........................");
 
@@ -99,7 +87,6 @@ public class AccountServiceTests {
     public void testAll() throws Exception {
         testModify();
         testRemove();
-        testGetList();
     }
 
     @Test

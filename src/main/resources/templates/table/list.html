@@ -7,6 +7,20 @@
 <th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/list.css}"></th:block>
 
 <div layout:fragment="content">
+    <!-- 검색 조건 -->
+    <form action="/table/list" method="get">
+        <div>
+            <label for="searchDate">날짜 범위</label><input id="searchDate" type="date" name="dateStart"> ~ <input id="dateEnd" type="date" name="dateEnd">
+        </div>
+        <label for="searchTitle">제목</label><input id="searchTitle" type="text" name="title">
+        <label for="searchContent">내용</label><input id="searchContent" type="text" name="content">
+        <label for="searchWriter">작성자</label><input id="searchWriter" type="text" name="writer">
+        <label for="searchAmount">수량 범위</label><input id="searchAmount" type="number" name="amountStart"> ~ <input type="number" name="amountEnd">
+        <label for="searchPrice">단가 범위</label><input id="searchPrice" type="number" step="any" name="priceStart"> ~ <input type="number" step="any" name="priceEnd">
+
+        <button type="submit">검색</button>
+    </form>
+
     <!-- 매입/출 목록 -->
     <form th:action="@{/table/register}" th:object="${accountDTO}" method="post">
         <input type="hidden" th:each="info:${pageRequestDTO.info}" th:name="${info.key}" th:value="${info.value}">
@@ -25,7 +39,7 @@
         <tbody class="main-table">
         <tr th:each="dto:${responseDTO.dtoList}">
             <td class="col-date">[[${#temporals.format(dto.date, 'yyyy-MM-dd')}]]</td>
-            <td class="col-title"><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}" th:text="|${' ['}${dto.replyCount}${']'}|"></span></td>
+            <td class="col-title"><a th:href="|@{/table/read(ano = ${dto.ano})}&${pageRequestDTO.link}${accountSearchDTO.link}|">[[${dto.title}]]</a><span th:if="${dto.replyCount > 0}" th:text="|${' ['}${dto.replyCount}${']'}|"></span></td>
             <td class="col-price">[[${#numbers.formatDecimal(dto.price,0,'COMMA',2,'POINT')}]]</td>
             <td class="col-amount">[[${dto.amount}]]</td>
             <td th:class="|${dto.snp ? 'sales' : 'purchase'} col-totalPrice|">[[${dto.snp ? '+' : '-'}]][[${#numbers.formatDecimal(dto.totalPrice,0,'COMMA',2,'POINT')}]]</td>
@@ -81,21 +95,21 @@
                     <th:block th:if="${responseDTO.prev}">
                         <!-- 이전 버튼 -->
                         <li >
-                            <a th:href="|${link}&page=${responseDTO.start - 1}|">이전</a>
+                            <a th:href="|${link}&page=${responseDTO.start - 1}${accountSearchDTO.link}|">이전</a>
                         </li>
                     </th:block>
 
                     <th:block th:if="${responseDTO.total > 0}">
                         <!-- 페이지 번호 버튼 -->
                         <li th:each="i:${#numbers.sequence(responseDTO.start, responseDTO.end)}">
-                            <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}|">[[${i}]]</a>
+                            <a th:class="${pageRequestDTO.page == i ? 'active' : ''}" th:href="|${link}&page=${i}${accountSearchDTO.link}|">[[${i}]]</a>
                         </li>
                     </th:block>
 
                     <th:block th:if="${responseDTO.next}">
                         <!-- 다음 버튼 -->
                         <li >
-                            <a th:href="|${link}&page=${responseDTO.end + 1}|">다음</a>
+                            <a th:href="|${link}&page=${responseDTO.end + 1}${accountSearchDTO.link}|">다음</a>
                         </li>
                     </th:block>
                 </ul>
