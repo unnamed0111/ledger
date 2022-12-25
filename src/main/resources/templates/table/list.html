@@ -8,15 +8,30 @@
 
 <div layout:fragment="content">
     <!-- 검색 조건 -->
-    <form action="/table/list" method="get">
-        <div>
-            <label for="searchDate">날짜 범위</label><input id="searchDate" type="date" name="dateStart"> ~ <input id="dateEnd" type="date" name="dateEnd">
+    <form class="search-form" action="/table/list" method="get">
+        <div class="input-range">
+            <label for="searchDate">날짜 범위</label><input id="searchDate" type="date" name="dateStart"><div class="symbol-range">~</div><input id="dateEnd" type="date" name="dateEnd">
         </div>
-        <label for="searchTitle">제목</label><input id="searchTitle" type="text" name="title">
-        <label for="searchContent">내용</label><input id="searchContent" type="text" name="content">
-        <label for="searchWriter">작성자</label><input id="searchWriter" type="text" name="writer">
-        <label for="searchAmount">수량 범위</label><input id="searchAmount" type="number" name="amountStart"> ~ <input type="number" name="amountEnd">
-        <label for="searchPrice">단가 범위</label><input id="searchPrice" type="number" step="any" name="priceStart"> ~ <input type="number" step="any" name="priceEnd">
+
+        <div>
+            <label for="searchTitle">제목</label><input id="searchTitle" type="text" name="title">
+        </div>
+
+        <div>
+            <label for="searchContent">내용</label><input id="searchContent" type="text" name="content">
+        </div>
+
+        <div>
+            <label for="searchWriter">작성자</label><input id="searchWriter" type="text" name="writer">
+        </div>
+
+        <div class="input-range">
+            <label for="searchAmount">수량 범위</label><input id="searchAmount" type="number" name="amountStart"><div class="symbol-range">~</div><input type="number" name="amountEnd">
+        </div>
+
+        <div class="input-range">
+            <label for="searchPrice">단가 범위</label><input id="searchPrice" type="number" step="any" name="priceStart"><div class="symbol-range">~</div><input type="number" step="any" name="priceEnd">
+        </div>
 
         <button type="submit">검색</button>
     </form>
