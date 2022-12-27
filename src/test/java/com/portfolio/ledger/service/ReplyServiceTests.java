@@ -16,16 +16,16 @@ public class ReplyServiceTests {
     @Autowired
     ReplyService replyService;
 
-    private Long testAno = 95L;
+    private Long testAno = 1L;
 
-    @BeforeEach
+    @Test
     public void registerTest() {
         log.info("..........................REGISTER REPLY..........................");
 
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .ano(testAno)
                 .content("댓글 서비스 확인")
-                .writer("댓글유저")
+                .writer("user1")
                 .build();
 
         replyService.register(replyDTO);

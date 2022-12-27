@@ -64,7 +64,7 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
 
             // 작성자 키워드 포함
             if (searchDTO.getWriter() != null && searchDTO.getWriter().length() > 0) {
-                booleanBuilder.and(account.writer.contains(searchDTO.getWriter()));
+                booleanBuilder.and(account.member.mid.contains(searchDTO.getWriter()));
             }
 
             // 수량 이상
@@ -102,8 +102,8 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
                         account.content,
                         account.price,
                         account.amount,
+                        account.member.mid.as("writer"),
                         account.snp,
-                        account.writer,
                         account.regDate,
                         reply.count().as("replyCount")
                 )

@@ -15,6 +15,7 @@ import java.util.Set;
 public class Member extends BaseEntity {
 
     @Id
+    @Column(name = "mid")
     private String mid;
 
     @Column(name = "mpw")

@@ -5,6 +5,7 @@ import com.portfolio.ledger.domain.Member;
 import com.portfolio.ledger.domain.MemberRole;
 import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.AccountDTO;
+import com.portfolio.ledger.repository.AccountRepository;
 import com.portfolio.ledger.repository.MemberRepository;
 import com.portfolio.ledger.repository.ReplyRepository;
 import com.portfolio.ledger.service.AccountService;
@@ -32,7 +33,7 @@ public class Initialize implements ApplicationRunner {
     private MemberRepository memberRepository;
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -42,11 +43,12 @@ public class Initialize implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        int userNumber = 10;
+
         createLoginTable();
-        createUsers();
-        createAccount();
-        createAccounts();
-        createReply();
+//        createUsers(userNumber);
+//        createAccounts(userNumber);
+//        createReplies();
     }
     private void createLoginTable() throws Exception {
         log.info("............CREATE TABLE PERSISTENT FOR LOGINS............");
@@ -64,10 +66,10 @@ public class Initialize implements ApplicationRunner {
         statement.execute(sql);
     }
 
-    private void createUsers() {
+    private int createUsers(int number) {
         log.info("..........................INSERT SAMPLE..........................");
 
-        IntStream.rangeClosed(1, 10).forEach(i -> {
+        IntStream.rangeClosed(1, number).forEach(i -> {
             Member member = Member.builder()
                     .mid("user" + i)
                     .mpw(passwordEncoder.encode("0000"))
@@ -82,66 +84,41 @@ public class Initialize implements ApplicationRunner {
 
             memberRepository.save(member);
         });
+
+        return number;
     }
 
-    private void createAccount() {
-        log.info("..........................CREATE ACCOUNTS..........................");
-
-        AccountDTO salesDTO = AccountDTO.builder()
-                .date(LocalDate.now())
-                .title("매출 내역 1")
-                .content("테스트 매출 내역입니다. 단가 100원 수량 100개")
-                .price(100.0)
-                .amount(100)
-                .writer("user1")
-                .snp(AccountDTO.SYMBOL_SALES)
-                .build();
-
-        AccountDTO purchaseDTO = AccountDTO.builder()
-                .date(LocalDate.now().minusDays(10))
-                .title("지출 내역 1")
-                .content("테스트 지출 내역입니다. 단가 322.22원 수량 40개")
-                .price(322.22)
-                .amount(40)
-                .writer("user2")
-                .snp(AccountDTO.SYMBOL_PURCHASE)
-                .build();
-
-        accountService.register(salesDTO);
-        accountService.register(purchaseDTO);
-    }
-
-    private void createReply() {
+    private void createReplies() {
         log.info(".............................CREATE REPLIES.............................");
 
-        Account refAccount = Account.builder()
-                .ano(1L)
-                .build();
+        Account account = Account.builder().ano(1L).build();
+        Member member = Member.builder().mid("user1").build();
 
-        IntStream.rangeClosed(1, 5).forEach(i -> {
-            Reply reply = Reply.builder()
-                    .account(refAccount)
-                    .content("테스트 댓글..." + i)
-                    .writer("user" + i)
-                    .build();
+        IntStream.rangeClosed(1, 10)
+                .forEach(i -> {
+                    Reply reply = Reply.builder()
+                            .account(account)
+                            .member(member)
+                            .content("테스트 댓글" + i)
+                            .build();
 
-            replyRepository.save(reply);
-        });
+                    replyRepository.save(reply);
+                });
     }
 
-    private void createAccounts() {
-        IntStream.rangeClosed(1, 100).forEach(i -> {
-            AccountDTO accountDTO = AccountDTO.builder()
+    private void createAccounts(int number) {
+        IntStream.rangeClosed(1, number).forEach(i -> {
+            Account account = Account.builder()
                     .date(LocalDate.now().minusDays(i))
                     .title("지출 내역" + i)
                     .content("테스트 내역입니다 단가: " + (i * 10.0) + " , 수량: " + i)
                     .price(i * 10.0)
                     .amount(i)
-                    .writer("user2")
+                    .member(Member.builder().mid("user" + ((i % 10) + 1)).build())
                     .snp(i % 2 == 0 ? AccountDTO.SYMBOL_SALES : AccountDTO.SYMBOL_PURCHASE)
                     .build();
 
-            accountService.register(accountDTO);
+            accountRepository.save(account);
         });
     }
 }

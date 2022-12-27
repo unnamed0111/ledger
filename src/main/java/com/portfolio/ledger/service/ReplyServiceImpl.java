@@ -26,6 +26,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Long register(ReplyDTO replyDTO) {
         Reply reply = modelMapper.map(replyDTO, Reply.class);
+        reply.setWriter(replyDTO.getWriter());
 
         Long rno = replyRepository.save(reply).getRno();
 
@@ -44,7 +45,12 @@ public class ReplyServiceImpl implements ReplyService {
 
         List<ReplyDTO> dtoList = result.getContent()
                 .stream()
-                .map(reply -> modelMapper.map(reply, ReplyDTO.class))
+                .map(reply -> {
+                    ReplyDTO replyDTO = modelMapper.map(reply, ReplyDTO.class);
+                    replyDTO.setWriter(reply.getWriter());
+
+                    return replyDTO;
+                })
                 .collect(Collectors.toList());
 
         PageResponseDTO pageResponseDTO = PageResponseDTO.<ReplyDTO>withAll()

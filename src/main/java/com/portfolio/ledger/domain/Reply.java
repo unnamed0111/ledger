@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "account")
+@ToString(exclude = {"account", "member"})
 public class Reply extends BaseEntity {
 
     @Id
@@ -20,12 +20,23 @@ public class Reply extends BaseEntity {
     private Long rno;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Account_ano")
     private Account account;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Member_mid")
+    private Member member;
+
     private String content;
-    private String writer;
 
     public void changeContent(String content) {
         this.content = content;
+    }
+    public String getWriter() {
+        return this.member.getMid();
+    }
+
+    public void setWriter(String writer) {
+        this.member = Member.builder().mid(writer).build();
     }
 }

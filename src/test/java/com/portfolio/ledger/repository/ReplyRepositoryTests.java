@@ -1,7 +1,10 @@
 package com.portfolio.ledger.repository;
 
 import com.portfolio.ledger.domain.Account;
+import com.portfolio.ledger.domain.Member;
+import com.portfolio.ledger.domain.MemberRole;
 import com.portfolio.ledger.domain.Reply;
+import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.service.AccountService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,44 +15,87 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.stream.IntStream;
 
 @SpringBootTest
 @Log4j2
 public class ReplyRepositoryTests {
-    @Autowired
-    private ReplyRepository replyRepository;
+    @Autowired private ReplyRepository replyRepository;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
-    private Long ano = 95L;
+    private Long ano = 1L;
+
+    @BeforeEach
+    public void insert() {
+        insertMember();
+        insertAccount();
+    }
+    private void insertMember() {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+            Member member = Member.builder()
+                    .mid("user" + i)
+                    .mpw(passwordEncoder.encode("0000"))
+                    .email("user" + i + "@email" + i + ".com")
+                    .build();
+
+            member.addRole(MemberRole.USER);
+
+            if(i >= 6) {
+                member.addRole(MemberRole.ADMIN);
+            }
+
+            memberRepository.save(member);
+        });
+    }
+    private void insertAccount() {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+            Account account = Account.builder()
+                    .date(LocalDate.now().minusDays(i))
+                    .title("지출 내역" + i)
+                    .content("테스트 내역입니다 단가: " + (i * 10.0) + " , 수량: " + i)
+                    .price(i * 10.0)
+                    .amount(i)
+                    .member(Member.builder().mid("user" + ((i % 10) + 1)).build())
+                    .snp(i % 2 == 0 ? AccountDTO.SYMBOL_SALES : AccountDTO.SYMBOL_PURCHASE)
+                    .build();
+
+            accountRepository.save(account);
+        });
+    }
 
     @Test
     public void testInsert() {
         log.info("............................REPLY INSERT............................");
 
         Account account = Account.builder().ano(ano).build();
+        Member member = Member.builder().mid("user1").build();
 
-        IntStream.rangeClosed(1, 20).forEach(i -> {
-            Reply reply = Reply.builder()
-                    .account(account)
-                    .content("댓글...." + i)
-                    .writer("User" + (i % 4))
-                    .build();
+        Reply reply = Reply.builder()
+                .account(account)
+                .member(member)
+                .content("테스트 댓글")
+                .build();
 
-            replyRepository.save(reply);
-        });
+        Reply result = replyRepository.save(reply);
+        log.info(result + "Member ID : " + result.getMember().getMid() + "Account ano : " + result.getAccount().getAno());
     }
 
-    @Test
-    public void testAccountReplies() {
-        log.info("............................REPLY SELECT BY ACCOUNT............................");
-
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("rno").descending());
-
-        Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
-
-        result.getContent().forEach(reply -> {
-            log.info(reply);
-        });
-    }
+//    @Test
+//    public void testAccountReplies() {
+//        log.info("............................REPLY SELECT BY ACCOUNT............................");
+//
+//        Pageable pageable = PageRequest.of(0, 10, Sort.by("rno").descending());
+//
+//        Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
+//
+//        result.getContent().forEach(reply -> {
+//            log.info(reply);
+//        });
+//    }
 }

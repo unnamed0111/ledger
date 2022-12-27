@@ -1,6 +1,7 @@
 package com.portfolio.ledger.repository;
 
 import com.portfolio.ledger.domain.Account;
+import com.portfolio.ledger.domain.Member;
 import com.portfolio.ledger.domain.Reply;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.AccountSearchDTO;
@@ -14,10 +15,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.transaction.Transactional;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
@@ -61,23 +64,19 @@ public class AccountRepositoryTests {
     @Test
     public void testInsert() {
         log.info("..........................INSERT..........................");
-        IntStream.rangeClosed(1, 100).forEach(i -> {
-            int amount = 2;
-            double price = 10.05;
-            double totalPrice = amount * price;
 
-            Account account = Account.builder()
-                    .date(LocalDate.now().minusDays(100-i))
-                    .title("title" + i)
-                    .content("content" + i)
-                    .amount(amount)
-                    .price(price)
-                    .snp(i % 2 == 0 ? true : false)
-                    .writer("user" + i)
-                    .build();
+        Member member = Member.builder().mid("user1").build();
+        Account account = Account.builder()
+                .date(LocalDate.now())
+                .title("테스트 타이틀")
+                .content("테스트 컨텐츠")
+                .member(member)
+                .price(22.22)
+                .amount(20)
+                .snp(true)
+                .build();
 
-            accountRepository.save(account);
-        });
+        accountRepository.save(account);
     }
 
     @Test
@@ -115,8 +114,7 @@ public class AccountRepositoryTests {
                 "changed content",
                 1,
                 100,
-                false,
-                "changedUser");
+                false);
 
         accountRepository.save(account);
     }
@@ -160,8 +158,8 @@ public class AccountRepositoryTests {
         list.forEach(account -> log.info(account));
 
         AccountSearchDTO searchDTO = AccountSearchDTO.builder()
-                .amountStart(70)
-                .dateStart(LocalDate.of(2022,10,1))
+                .dateStart(LocalDate.of(2022,12,1))
+                .writer("user4")
                 .build();
 
         log.info(searchDTO);
@@ -171,5 +169,13 @@ public class AccountRepositoryTests {
 
         log.info(".....................RESULT.....................");
         result.getContent().forEach(accountDTO -> log.info(accountDTO));
+    }
+
+    @Test
+    public void testSelectWithMember() {
+        log.info(".................SELECT with MEMBER.................");
+
+        Optional<Account> result = accountRepository.findById(1L);
+        log.info("Writer : " + result.orElseThrow().getWriter());
     }
 }

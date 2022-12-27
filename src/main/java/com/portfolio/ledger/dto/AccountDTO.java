@@ -40,7 +40,6 @@ public class AccountDTO {
     @Builder.Default
     private boolean     snp = SYMBOL_PURCHASE;
 
-    @NotEmpty(message = "{required.accountDTO.writer}")
     private String      writer;
 
     private Long        replyCount;

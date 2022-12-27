@@ -31,6 +31,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Long register(AccountDTO accountDTO) {
        Account account = modelMapper.map(accountDTO, Account.class);
+       account.setWriter(accountDTO.getWriter());
 
        return accountRepository.save(account).getAno();
     }
@@ -54,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> result = accountRepository.findById(ano);
         Account account = result.orElseThrow();
         AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
+        accountDTO.setWriter(account.getWriter());
 
         return accountDTO;
     }
@@ -71,8 +73,7 @@ public class AccountServiceImpl implements AccountService {
                 accountDTO.getContent(),
                 accountDTO.getAmount(),
                 accountDTO.getPrice(),
-                accountDTO.isSnp(),
-                accountDTO.getWriter()
+                accountDTO.isSnp()
         );
 
         accountRepository.save(account);

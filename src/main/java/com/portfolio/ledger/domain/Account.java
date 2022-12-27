@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "member")
 public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +36,16 @@ public class Account extends BaseEntity {
     @Column(nullable = false)
     private boolean snp; // 지출/매출 구분
 
-    @Column(length = 50, nullable = false)
-    private String writer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Member_mid")
+    private Member member;
 
     public void change(LocalDate date,
                        String title,
                        String content,
                        int amount,
                        double price,
-                       boolean snp,
-                       String writer) {
+                       boolean snp) {
 
         this.date       = date;
         this.title      = title;
@@ -53,6 +53,13 @@ public class Account extends BaseEntity {
         this.amount     = amount;
         this.price      = price;
         this.snp        = snp;
-        this.writer     = writer;
+    }
+
+    public String getWriter() {
+        return getMember().getMid();
+    }
+
+    public void setWriter(String writer) {
+        this.member = Member.builder().mid(writer).build();
     }
 }
