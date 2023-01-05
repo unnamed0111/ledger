@@ -1,12 +1,14 @@
 package com.portfolio.ledger.service;
 
 import com.portfolio.ledger.domain.Account;
+import com.portfolio.ledger.domain.Member;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.AccountSearchDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.exception.NotOwnerException;
 import com.portfolio.ledger.repository.AccountRepository;
+import com.portfolio.ledger.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -26,12 +28,15 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
 
     @Override
     public Long register(AccountDTO accountDTO) {
        Account account = modelMapper.map(accountDTO, Account.class);
-       account.setWriter(accountDTO.getWriter());
+       Member member = Member.builder().uid(accountDTO.getUid()).build();
+
+       account.setWriter(member);
 
        return accountRepository.save(account).getAno();
     }

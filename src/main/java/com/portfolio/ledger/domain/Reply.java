@@ -24,7 +24,7 @@ public class Reply extends BaseEntity {
     private Account account;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Member_mid")
+    @JoinColumn(name = "Member_mid", updatable = false)
     private Member member;
 
     private String content;

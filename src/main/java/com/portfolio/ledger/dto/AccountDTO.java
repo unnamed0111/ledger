@@ -40,7 +40,9 @@ public class AccountDTO {
     @Builder.Default
     private boolean     snp = SYMBOL_PURCHASE;
 
+    // USER 관련 필드
     private String      writer;
+    private Long        uid;
 
     private Long        replyCount;
 

@@ -27,8 +27,8 @@ import java.util.stream.IntStream;
 @SpringBootTest
 @Log4j2
 public class AccountRepositoryTests {
-    @Autowired
-    private AccountRepository accountRepository;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private MemberRepository memberRepository;
 
     // 샘플 댓글 생성 용도
 //    @Autowired
@@ -57,6 +57,7 @@ public class AccountRepositoryTests {
 //    }
 
 //    @BeforeEach
+    @BeforeEach
     public void initialize() {
         testInsert();
     }
@@ -65,12 +66,19 @@ public class AccountRepositoryTests {
     public void testInsert() {
         log.info("..........................INSERT..........................");
 
-        Member member = Member.builder().mid("user1").build();
+        Member member = Member.builder()
+                .mid("user1")
+                .mpw("1111")
+                .email("aaa@aaa.com")
+                .build();
+
+        Member refMember = memberRepository.save(member);
+
         Account account = Account.builder()
                 .date(LocalDate.now())
                 .title("테스트 타이틀")
                 .content("테스트 컨텐츠")
-                .member(member)
+                .member(refMember)
                 .price(22.22)
                 .amount(20)
                 .snp(true)
@@ -154,12 +162,9 @@ public class AccountRepositoryTests {
     public void testSearch() {
         log.info(".................SEARCH TEST.................");
 
-        List<Account> list = accountRepository.findAll();
-        list.forEach(account -> log.info(account));
-
         AccountSearchDTO searchDTO = AccountSearchDTO.builder()
                 .dateStart(LocalDate.of(2022,12,1))
-                .writer("user4")
+                .writer("user1")
                 .build();
 
         log.info(searchDTO);
@@ -168,7 +173,7 @@ public class AccountRepositoryTests {
         Page<AccountDTO> result = accountRepository.searchList(pageable, searchDTO);
 
         log.info(".....................RESULT.....................");
-        result.getContent().forEach(accountDTO -> log.info(accountDTO));
+        result.getContent().forEach(accountDTO -> log.info("writer : " + accountDTO.getWriter() + " | " + accountDTO));
     }
 
     @Test

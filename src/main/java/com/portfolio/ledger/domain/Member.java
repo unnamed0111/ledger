@@ -1,6 +1,7 @@
 package com.portfolio.ledger.domain;
 
 import lombok.*;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -13,9 +14,12 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString(exclude = "roleSet")
 public class Member extends BaseEntity {
-
     @Id
-    @Column(name = "mid")
+    @Column(name = "uid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long uid;
+
+    @Column(name = "mid", unique = true)
     private String mid;
 
     @Column(name = "mpw")

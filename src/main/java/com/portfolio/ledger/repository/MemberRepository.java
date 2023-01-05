@@ -11,11 +11,15 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, String>, MemberSearch {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberSearch {
     @EntityGraph(attributePaths = "roleSet")
     @Query("SELECT m FROM Member m WHERE m.mid = :mid and m.social = false")
     Optional<Member> getWithRoles(String mid);
 
     @EntityGraph(attributePaths = "roleSet")
     Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByMid(String mid);
+
+    boolean existsByMid(String mid);
 }

@@ -1,13 +1,16 @@
 package com.portfolio.ledger.service;
 
-import com.portfolio.ledger.dto.AccountDTO;
-import com.portfolio.ledger.dto.PageRequestDTO;
-import com.portfolio.ledger.dto.PageResponseDTO;
+import com.portfolio.ledger.dto.*;
+import com.portfolio.ledger.repository.MemberRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,10 +20,10 @@ import java.util.stream.IntStream;
 @SpringBootTest
 @Log4j2
 public class AccountServiceTests {
-    @Autowired
-    private AccountService accountService;
+    @Autowired private AccountService accountService;
+    @Autowired private MemberService memberService;
 
-//    @BeforeEach
+    @BeforeEach
     public void testInitialize() {
         // 기록 저장
         testRegister();
@@ -30,18 +33,36 @@ public class AccountServiceTests {
     public void testRegister() {
         log.info(".........................REGISTER.........................");
 
-        IntStream.rangeClosed(1, 100).forEach(i -> {
+        IntStream.rangeClosed(1, 10).forEach(i -> {
+            MemberJoinDTO memberJoinDTO = MemberJoinDTO.builder()
+                    .mid("user" + i)
+                    .mpw("aaaa")
+                    .email("aaaa@aaa.com")
+                    .build();
+
+            try {
+                memberService.join(memberJoinDTO);
+            } catch (MemberService.MidExistException e) {
+                log.info("Exist MID !!!");
+            }
+
+            log.info("USER" + i + " is joined.");
+        });
+
+        IntStream.rangeClosed(1, 10).forEach(i -> {
             AccountDTO accountDTO = AccountDTO.builder()
-                    .date(LocalDate.now().minusDays(100 - i))
+                    .date(LocalDate.now().minusDays(i))
                     .title("Title Sample" + i)
                     .content("Content Sample" + i)
                     .amount(i)
                     .price(100.0)
                     .snp(i % 2 == 0 ? true : false)
-                    .writer("user" + i)
+                    .uid((long) i)
                     .build();
 
             accountService.register(accountDTO);
+
+            log.info("Account" + i + " is registered");
         });
     }
 
@@ -95,5 +116,24 @@ public class AccountServiceTests {
 
         log.info("..................................GET TOTAL PRICE..................................");
         log.info(result);
+    }
+
+    @Test
+    public void testGetList() {
+        log.info(".................GET LIST TEST.................");
+
+        AccountSearchDTO searchDTO = AccountSearchDTO.builder()
+                .writer("user1")
+                .build();
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().build();
+
+        log.info(searchDTO);
+        log.info(pageRequestDTO);
+
+        PageResponseDTO<AccountDTO> pageResponseDTO = accountService.getList(pageRequestDTO, searchDTO);
+
+        log.info(".....................RESULT.....................");
+        pageResponseDTO.getDtoList().forEach(accountDTO -> log.info("writer : " + accountDTO.getWriter() + " | " + accountDTO));
     }
 }

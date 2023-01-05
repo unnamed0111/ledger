@@ -14,6 +14,7 @@ import java.util.Map;
 @Setter
 @ToString
 public class MemberSecurityDTO extends User implements OAuth2User {
+    private Long uid;
     private String mid;
     private String mpw;
     private String email;
@@ -22,6 +23,7 @@ public class MemberSecurityDTO extends User implements OAuth2User {
 
     private Map<String, Object> props; // 소셜 로그인 정보
     public MemberSecurityDTO(
+            Long uid,
             String username,
             String password,
             String email,
@@ -30,6 +32,7 @@ public class MemberSecurityDTO extends User implements OAuth2User {
             Collection<? extends GrantedAuthority> authorities
     ) {
         super(username, password, authorities);
+        this.uid = uid;
         this.mid = username;
         this.mpw = password;
         this.email = email;

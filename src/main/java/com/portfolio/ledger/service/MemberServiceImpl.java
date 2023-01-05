@@ -22,7 +22,7 @@ public class MemberServiceImpl implements MemberService {
     public void join(MemberJoinDTO memberJoinDTO) throws MidExistException {
         String mid = memberJoinDTO.getMid();
 
-        boolean exist = memberRepository.existsById(mid);
+        boolean exist = memberRepository.existsByMid(mid);
 
         if(exist) throw new MidExistException(); // 이미 아이디가 존재하면
 

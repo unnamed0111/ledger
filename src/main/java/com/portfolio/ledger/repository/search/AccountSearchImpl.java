@@ -2,6 +2,7 @@ package com.portfolio.ledger.repository.search;
 
 import com.portfolio.ledger.domain.Account;
 import com.portfolio.ledger.domain.QAccount;
+import com.portfolio.ledger.domain.QMember;
 import com.portfolio.ledger.domain.QReply;
 import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.AccountSearchDTO;
@@ -35,6 +36,7 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
     public Page<AccountDTO> searchList(Pageable pageable, AccountSearchDTO searchDTO) {
         QAccount    account = QAccount.account;
         QReply      reply   = QReply.reply;
+        QMember     member  = QMember.member;
 
         JPQLQuery<Account> query = from(account); // ... from account ...
 
@@ -64,8 +66,10 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
 
             // 작성자 키워드 포함
             if (searchDTO.getWriter() != null && searchDTO.getWriter().length() > 0) {
-                booleanBuilder.and(account.member.mid.contains(searchDTO.getWriter()));
+//                booleanBuilder.and(account.member.mid.contains(searchDTO.getWriter())); // 중복 join 생길 수 있음
+                booleanBuilder.and(member.mid.contains(searchDTO.getWriter()));
             }
+
 
             // 수량 이상
             if(searchDTO.getAmountStart() != null && searchDTO.getAmountStart() > 0) {
@@ -91,6 +95,7 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
         }
 
         query.leftJoin(reply).on(reply.account.eq(account));
+        query.innerJoin(member).on(account.member.eq(member));
         query.groupBy(account);
 
         JPQLQuery<AccountDTO> dtoQuery = query.select(
@@ -102,9 +107,9 @@ public class AccountSearchImpl extends QuerydslRepositorySupport implements Acco
                         account.content,
                         account.price,
                         account.amount,
-                        account.member.mid.as("writer"),
                         account.snp,
                         account.regDate,
+                        member.mid.as("writer"),
                         reply.count().as("replyCount")
                 )
         );

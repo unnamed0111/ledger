@@ -37,7 +37,7 @@ public class Account extends BaseEntity {
     private boolean snp; // 지출/매출 구분
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Member_mid")
+    @JoinColumn(name = "Member_uid", updatable = false)
     private Member member;
 
     public void change(LocalDate date,
@@ -59,7 +59,7 @@ public class Account extends BaseEntity {
         return getMember().getMid();
     }
 
-    public void setWriter(String writer) {
-        this.member = Member.builder().mid(writer).build();
+    public void setWriter(Member writer) {
+        this.member = writer;
     }
 }

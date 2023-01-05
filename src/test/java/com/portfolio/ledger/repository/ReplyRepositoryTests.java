@@ -37,6 +37,8 @@ public class ReplyRepositoryTests {
         insertAccount();
     }
     private void insertMember() {
+        log.info("=====================INSERT MEMBER=====================");
+
         IntStream.rangeClosed(1, 10).forEach(i -> {
             Member member = Member.builder()
                     .mid("user" + i)
@@ -54,6 +56,8 @@ public class ReplyRepositoryTests {
         });
     }
     private void insertAccount() {
+        log.info("=====================INSERT ACCOUNT=====================");
+
         IntStream.rangeClosed(1, 10).forEach(i -> {
             Account account = Account.builder()
                     .date(LocalDate.now().minusDays(i))
@@ -61,7 +65,7 @@ public class ReplyRepositoryTests {
                     .content("테스트 내역입니다 단가: " + (i * 10.0) + " , 수량: " + i)
                     .price(i * 10.0)
                     .amount(i)
-                    .member(Member.builder().mid("user" + ((i % 10) + 1)).build())
+                    .member(Member.builder().uid(1L).build())
                     .snp(i % 2 == 0 ? AccountDTO.SYMBOL_SALES : AccountDTO.SYMBOL_PURCHASE)
                     .build();
 
@@ -86,16 +90,16 @@ public class ReplyRepositoryTests {
         log.info(result + "Member ID : " + result.getMember().getMid() + "Account ano : " + result.getAccount().getAno());
     }
 
-//    @Test
-//    public void testAccountReplies() {
-//        log.info("............................REPLY SELECT BY ACCOUNT............................");
-//
-//        Pageable pageable = PageRequest.of(0, 10, Sort.by("rno").descending());
-//
-//        Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
-//
-//        result.getContent().forEach(reply -> {
-//            log.info(reply);
-//        });
-//    }
+    @Test
+    public void testAccountReplies() {
+        log.info("............................REPLY SELECT BY ACCOUNT............................");
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("rno").descending());
+
+        Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
+
+        result.getContent().forEach(reply -> {
+            log.info(reply);
+        });
+    }
 }

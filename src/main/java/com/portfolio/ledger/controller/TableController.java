@@ -4,10 +4,13 @@ import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.AccountSearchDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
+import com.portfolio.ledger.security.dto.MemberSecurityDTO;
 import com.portfolio.ledger.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,11 +54,11 @@ public class TableController {
     public String register(@Valid AccountDTO accountDTO,
                            BindingResult bindingResult,
                            PageRequestDTO pageRequestDTO,
-                           Principal principal,
+                           Authentication authentication,
                            RedirectAttributes redirectAttributes) {
-        log.info("...........................POST ACCOUNT LIST...........................");
+        log.info("...........................POST ACCOUNT...........................");
         log.info("pageRequestDTO : " + pageRequestDTO);
-        log.info(principal);
+        log.info(authentication.getPrincipal());
 
         if (bindingResult.hasErrors()) {
             log.info("...........................HAS ERRORS...........................");
@@ -68,7 +71,10 @@ public class TableController {
             return "redirect:/table/list";
         }
 
-        accountDTO.setWriter(principal.getName());
+        log.info("----------------------USER UID----------------------");
+        log.info(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
+
+        accountDTO.setUid(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
         accountService.register(accountDTO);
 
         return "redirect:/table/list";
