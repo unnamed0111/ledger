@@ -54,7 +54,7 @@ public class TableController {
     public String register(@Valid AccountDTO accountDTO,
                            BindingResult bindingResult,
                            PageRequestDTO pageRequestDTO,
-                           Authentication authentication,
+                           Authentication authentication, // authentication 객체로 받아서 userDetails 객체를 반환받아야함
                            RedirectAttributes redirectAttributes) {
         log.info("...........................POST ACCOUNT...........................");
         log.info("pageRequestDTO : " + pageRequestDTO);

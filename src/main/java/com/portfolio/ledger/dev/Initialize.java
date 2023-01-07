@@ -46,7 +46,7 @@ public class Initialize implements ApplicationRunner {
         int userNumber = 10;
 
         createLoginTable();
-//        createUsers(userNumber);
+        createUsers(userNumber);
 //        createAccounts(userNumber);
 //        createReplies();
     }

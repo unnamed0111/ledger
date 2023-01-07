@@ -36,7 +36,7 @@ public class Reply extends BaseEntity {
         return this.member.getMid();
     }
 
-    public void setWriter(String writer) {
-        this.member = Member.builder().mid(writer).build();
+    public void setWriter(Long uid) {
+        this.member = Member.builder().uid(uid).build();
     }
 }

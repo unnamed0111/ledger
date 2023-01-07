@@ -24,6 +24,7 @@ public class ReplyDTO {
     private String content;
 
     private String writer;
+    private Long uid;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDate;

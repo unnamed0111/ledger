@@ -4,12 +4,14 @@ import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.dto.ReplyDTO;
 import com.portfolio.ledger.exception.NotOwnerException;
+import com.portfolio.ledger.security.dto.MemberSecurityDTO;
 import com.portfolio.ledger.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,7 @@ public class ReplyController {
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> register(@RequestBody @Valid ReplyDTO replyDTO,
                                                       BindingResult bindingResult,
-                                                      Principal principal) throws BindException {
+                                                      Authentication authentication) throws BindException {
         log.info("..................................POST..................................");
         log.info(replyDTO);
 
@@ -45,7 +47,7 @@ public class ReplyController {
             throw new BindException(bindingResult);
         }
 
-        replyDTO.setWriter(principal.getName());
+        replyDTO.setUid(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
 
         Long rno = replyService.register(replyDTO);
 

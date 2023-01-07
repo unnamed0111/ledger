@@ -26,7 +26,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Long register(ReplyDTO replyDTO) {
         Reply reply = modelMapper.map(replyDTO, Reply.class);
-        reply.setWriter(replyDTO.getWriter());
+        reply.setWriter(replyDTO.getUid());
 
         Long rno = replyRepository.save(reply).getRno();
 

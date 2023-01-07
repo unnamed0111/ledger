@@ -51,7 +51,8 @@ public class SecurityConfig {
 
         http.csrf().disable(); // CSRF 토큰 이용을 비활성화
 
-        http.rememberMe() // 쿠키를 발행해서 로그인 기억 기능 설정 (로그인 페이지를 커스터마이징 했을 때 사용)
+        http
+                .rememberMe() // 쿠키를 발행해서 로그인 기억 기능 설정 (로그인 페이지를 커스터마이징 했을 때 사용)
                 .key("12345678") // 쿠키의 값을 인코딩하기 위한 키값
                 .tokenRepository(persistentTokenRepository()) // 쿠키값과 사용자 정보 저장소 설정
                 .userDetailsService(userDetailsService)

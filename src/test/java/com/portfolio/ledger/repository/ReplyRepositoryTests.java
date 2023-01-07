@@ -33,8 +33,8 @@ public class ReplyRepositoryTests {
 
     @BeforeEach
     public void insert() {
-        insertMember();
         insertAccount();
+        testInsert();
     }
     private void insertMember() {
         log.info("=====================INSERT MEMBER=====================");
@@ -78,7 +78,7 @@ public class ReplyRepositoryTests {
         log.info("............................REPLY INSERT............................");
 
         Account account = Account.builder().ano(ano).build();
-        Member member = Member.builder().mid("user1").build();
+        Member member = Member.builder().uid(1L).build();
 
         Reply reply = Reply.builder()
                 .account(account)
@@ -87,7 +87,7 @@ public class ReplyRepositoryTests {
                 .build();
 
         Reply result = replyRepository.save(reply);
-        log.info(result + "Member ID : " + result.getMember().getMid() + "Account ano : " + result.getAccount().getAno());
+        log.info(result + "Member ID : " + result.getMember().getUid() + "Account ano : " + result.getAccount().getAno());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ReplyRepositoryTests {
         Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
 
         result.getContent().forEach(reply -> {
-            log.info(reply);
+            log.info("writer : " + reply.getWriter() + " | " + reply);
         });
     }
 }
