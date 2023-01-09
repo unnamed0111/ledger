@@ -59,11 +59,11 @@ public class ReplyController {
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping(value = "/{rno}")
-    public Map<String, Long> remove(@PathVariable("rno") Long rno, Principal principal) throws NotOwnerException {
+    public Map<String, Long> remove(@PathVariable("rno") Long rno, Authentication authentication) throws NotOwnerException {
 
         ReplyDTO replyDTO = ReplyDTO.builder()
                 .rno(rno)
-                .writer(principal.getName())
+                .uid(((MemberSecurityDTO)authentication.getPrincipal()).getUid())
                 .build();
 
         replyService.remove(replyDTO);
@@ -79,14 +79,14 @@ public class ReplyController {
     public Map<String, Long> modify(@PathVariable("rno") Long rno,
                                     @RequestBody @Valid ReplyDTO replyDTO,
                                     BindingResult bindingResult,
-                                    Principal principal) throws NotOwnerException, BindException {
+                                    Authentication authentication) throws NotOwnerException, BindException {
 
         if (bindingResult.hasErrors()) {
             throw new BindException(bindingResult);
         }
 
         replyDTO.setRno(rno);
-        replyDTO.setWriter(principal.getName());
+        replyDTO.setUid(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
 
         replyService.modify(replyDTO);
 

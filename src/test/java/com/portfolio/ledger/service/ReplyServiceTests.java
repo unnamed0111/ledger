@@ -21,7 +21,14 @@ public class ReplyServiceTests {
 
     private Long testAno = 1L;
 
-    @BeforeEach
+    @Test
+    public void testAll() throws Exception {
+        registerTest();
+        modifyTest();
+        getListOfAccountTest();
+    }
+
+    @Test
     public void registerTest() {
         log.info("......REGISTER ACCOUNT......");
 
@@ -61,5 +68,18 @@ public class ReplyServiceTests {
         PageResponseDTO<ReplyDTO> pageResponseDTO = replyService.getListOfAccount(ano, pageRequestDTO);
 
         log.info(pageResponseDTO);
+    }
+
+    @Test
+    public void modifyTest() throws Exception {
+        log.info("..........................MODIFY REPLY..........................");
+
+        ReplyDTO modReply = ReplyDTO.builder()
+                .rno(1L)
+                .uid(1L)
+                .content("수정 완료")
+                .build();
+
+        replyService.modify(modReply);
     }
 }

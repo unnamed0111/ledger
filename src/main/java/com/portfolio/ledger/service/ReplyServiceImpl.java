@@ -47,7 +47,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .stream()
                 .map(reply -> {
                     ReplyDTO replyDTO = modelMapper.map(reply, ReplyDTO.class);
-                    replyDTO.setWriter(reply.getWriter());
+                    replyDTO.setWriter(reply.getMember().getMid());
 
                     return replyDTO;
                 })
@@ -66,7 +66,7 @@ public class ReplyServiceImpl implements ReplyService {
     public void modify(ReplyDTO replyDTO) throws NotOwnerException {
         Reply reply = replyRepository.findById(replyDTO.getRno()).orElseThrow();
 
-        if(!reply.getWriter().equals(replyDTO.getWriter())) throw new NotOwnerException("not owner");
+        if(!reply.getMember().getUid().equals(replyDTO.getUid())) throw new NotOwnerException("not owner");
 
         reply.changeContent(replyDTO.getContent());
 
@@ -77,7 +77,7 @@ public class ReplyServiceImpl implements ReplyService {
     public void remove(ReplyDTO replyDTO) throws NotOwnerException {
         Reply reply = replyRepository.findById(replyDTO.getRno()).orElseThrow();
 
-        if(!reply.getWriter().equals(replyDTO.getWriter())) throw new NotOwnerException("not owner");
+        if(!reply.getMember().getUid().equals(replyDTO.getUid())) throw new NotOwnerException("not owner");
 
         replyRepository.deleteById(replyDTO.getRno());
     }

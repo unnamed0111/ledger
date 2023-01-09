@@ -104,14 +104,14 @@ public class TableController {
     public String modify(@Valid AccountDTO accountDTO,
                          BindingResult bindingResult,
                          PageRequestDTO pageRequestDTO,
-                         Principal principal,
+                         Authentication authentication,
                          RedirectAttributes redirectAttributes,
                          Model model) {
         log.info("...........................POST MODIFY...........................");
-        log.info("USER NAME : " + principal.getName());
+        log.info("USER UID : " + ((MemberSecurityDTO)authentication.getPrincipal()).getUid());
         log.info("AccountDTO : " + accountDTO);
 
-        accountDTO.setWriter(principal.getName());
+        accountDTO.setUid(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
 
         if(bindingResult.hasErrors()) {
             log.info(".................HAS ERRORS.................");
@@ -139,11 +139,11 @@ public class TableController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/remove")
     public String remove(AccountDTO accountDTO,
-                         Principal principal,
+                         Authentication authentication,
                          PageRequestDTO pageRequestDTO,
                          RedirectAttributes redirectAttributes) {
 
-        accountDTO.setWriter(principal.getName());
+        accountDTO.setUid(((MemberSecurityDTO)authentication.getPrincipal()).getUid());
 
         try {
             accountService.remove(accountDTO);

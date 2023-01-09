@@ -57,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO get(Long ano) {
-        Optional<Account> result = accountRepository.findById(ano);
+        Optional<Account> result = accountRepository.findWithMember(ano);
         Account account = result.orElseThrow();
         AccountDTO accountDTO = modelMapper.map(account, AccountDTO.class);
         accountDTO.setWriter(account.getWriter());
@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> result = accountRepository.findById(accountDTO.getAno());
         Account account = result.orElseThrow();
 
-        if(!account.getWriter().equals(accountDTO.getWriter())) throw new NotOwnerException("not owner");
+        if(!account.getMember().getUid().equals(accountDTO.getUid())) throw new NotOwnerException("not owner");
 
         account.change(
                 accountDTO.getDate(),
@@ -90,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> result = accountRepository.findById(accountDTO.getAno());
         Account account = result.orElseThrow();
 
-        if(!account.getWriter().equals(accountDTO.getWriter())) throw new NotOwnerException("not owner");
+        if(!account.getMember().getUid().equals(accountDTO.getUid())) throw new NotOwnerException("not owner");
 
         accountRepository.deleteById(accountDTO.getAno());
     }

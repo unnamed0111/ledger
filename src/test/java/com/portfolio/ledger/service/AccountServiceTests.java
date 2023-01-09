@@ -33,6 +33,7 @@ public class AccountServiceTests {
     public void testRegister() {
         log.info(".........................REGISTER.........................");
 
+        // Member 생성
         IntStream.rangeClosed(1, 10).forEach(i -> {
             MemberJoinDTO memberJoinDTO = MemberJoinDTO.builder()
                     .mid("user" + i)
@@ -45,10 +46,9 @@ public class AccountServiceTests {
             } catch (MemberService.MidExistException e) {
                 log.info("Exist MID !!!");
             }
-
-            log.info("USER" + i + " is joined.");
         });
 
+        // Account 생성
         IntStream.rangeClosed(1, 10).forEach(i -> {
             AccountDTO accountDTO = AccountDTO.builder()
                     .date(LocalDate.now().minusDays(i))
@@ -61,8 +61,6 @@ public class AccountServiceTests {
                     .build();
 
             accountService.register(accountDTO);
-
-            log.info("Account" + i + " is registered");
         });
     }
 
@@ -70,8 +68,8 @@ public class AccountServiceTests {
     public void testGetOne() {
         log.info(".........................GET.........................");
 
-        AccountDTO accountDTO = accountService.get(50L);
-        log.info(accountDTO);
+        AccountDTO accountDTO = accountService.get(5L);
+        log.info("writer : " + accountDTO.getWriter() + " | " + accountDTO);
     }
 
     @Test

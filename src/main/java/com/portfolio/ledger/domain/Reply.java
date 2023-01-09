@@ -32,10 +32,10 @@ public class Reply extends BaseEntity {
     public void changeContent(String content) {
         this.content = content;
     }
+
     public String getWriter() {
         return this.member.getMid();
     }
-
     public void setWriter(Long uid) {
         this.member = Member.builder().uid(uid).build();
     }

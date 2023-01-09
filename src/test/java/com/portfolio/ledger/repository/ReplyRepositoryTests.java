@@ -99,7 +99,7 @@ public class ReplyRepositoryTests {
         Page<Reply> result = replyRepository.listOfAccount(ano, pageable);
 
         result.getContent().forEach(reply -> {
-            log.info("writer : " + reply.getWriter() + " | " + reply);
+            log.info("writer : " + reply.getMember().getMid() + " | " + reply);
         });
     }
 }
