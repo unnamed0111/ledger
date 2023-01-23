@@ -12,4 +12,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @EntityGraph(attributePaths = "member")
     @Query("SELECT r FROM Reply r WHERE r.account.ano = :ano")
     Page<Reply> listOfAccount(Long ano, Pageable pageable);
+
+    void deleteByAccount_Ano(Long ano);
 }

@@ -4,6 +4,7 @@ import com.portfolio.ledger.dto.AccountDTO;
 import com.portfolio.ledger.dto.AccountSearchDTO;
 import com.portfolio.ledger.dto.PageRequestDTO;
 import com.portfolio.ledger.dto.PageResponseDTO;
+import com.portfolio.ledger.exception.NotOwnerException;
 import com.portfolio.ledger.security.dto.MemberSecurityDTO;
 import com.portfolio.ledger.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -124,7 +125,7 @@ public class TableController {
 
         try {
             accountService.modify(accountDTO);
-        } catch (Exception e) {
+        } catch (NotOwnerException e) {
             log.info("==================THIS USER IS NOT OWNER==================");
 
             redirectAttributes.addFlashAttribute("errors", e.getMessage());

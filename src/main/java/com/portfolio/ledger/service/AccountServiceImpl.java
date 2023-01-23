@@ -9,6 +9,7 @@ import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.exception.NotOwnerException;
 import com.portfolio.ledger.repository.AccountRepository;
 import com.portfolio.ledger.repository.MemberRepository;
+import com.portfolio.ledger.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final MemberRepository memberRepository;
+    private final ReplyRepository replyRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -92,6 +94,7 @@ public class AccountServiceImpl implements AccountService {
 
         if(!account.getMember().getUid().equals(accountDTO.getUid())) throw new NotOwnerException("not owner");
 
+        replyRepository.deleteByAccount_Ano(account.getAno());
         accountRepository.deleteById(accountDTO.getAno());
     }
 
