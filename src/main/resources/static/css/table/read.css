@@ -152,3 +152,30 @@
 .reply-item > button:first-of-type {
     border-right: 1px solid var(--line-color);
 }
+
+#replyPaging {
+    text-align: center;
+}
+
+#replyPaging > li {
+    display: inline-block;
+    border: 1px solid var(--line-color);
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+#replyPaging > li > a {
+    display: block;
+    padding: 10px;
+
+}
+
+#replyPaging > li:hover > a {
+    color: black;
+    background-color: var(--line-color);
+}
+
+#replyPaging > li > a.active {
+    background-color: #008cff;
+    color: white;
+}

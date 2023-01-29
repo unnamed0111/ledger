@@ -40,11 +40,11 @@ public class PageResponseDTO<E> {
         int last = (int) Math.ceil(total/(double)size); // 마지막 페이지
         this.dtoList = dtoList;
 
-        this.start = ((page - 1)/navSize) * navSize + 1;
+        this.start = (((page - 1)/navSize) * navSize) + 1;
         this.end = start + navSize - 1;
         this.end = last < end ? last : end;
 
         this.prev = (start - 1) > 1;
-        this.next = (end + 1) < last;
+        this.next = (end + 1) <= last;
     }
 }

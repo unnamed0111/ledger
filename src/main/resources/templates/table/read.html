@@ -43,6 +43,9 @@
         <ul id="replyList">
 
         </ul>
+        <ul id="replyPaging">
+
+        </ul>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -60,6 +63,7 @@
     const replyForm         = document.getElementById("replyForm");
     const replyRegisterBtn  = document.getElementById("replyRegisterBtn");
     const replyContent      = document.getElementById("replyContent");
+    const replyPaging       = document.getElementById("replyPaging");
 
     let replyCancelBtn = null;
 
@@ -87,6 +91,7 @@
 
         const dtoList = responseDTO.dtoList;
 
+        // 댓글 목록 채우기
         let str = '';
 
         for(const dto of dtoList) {
@@ -106,6 +111,30 @@
         }
 
         replyList.innerHTML = str;
+
+        // 댓글 페이징 채우기
+        let str2 = '';
+
+        if(responseDTO.prev) {
+            str2 += `<li><a class="btn-paging" onclick="getReplies(${responseDTO.start - 1}, ${responseDTO.size})">이전</a></li>`;
+        }
+
+        for(let i = responseDTO.start; i <= responseDTO.end; i++) {
+
+            let classStr = '';
+
+            if(i === responseDTO.page) {
+                classStr = `class="active"`
+            }
+
+            str2 += `<li><a ${classStr} onclick="getReplies(${i}, ${responseDTO.size})">${i}</a></li>`
+        }
+
+        if(responseDTO.next) {
+            str2 += `<li><a class="btn-paging" onclick="getReplies(${responseDTO.end + 1}, ${responseDTO.size})">다음</a></li>`
+        }
+
+        replyPaging.innerHTML = str2;
     }
 
     // 댓글 등록
