@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" th:href="@{/css/layout.css}">
+
+  <th:block layout:fragment="css"></th:block>
+  <th:block layout:fragment="title"></th:block>
+</head>
+<body>
+<div>
+
+</div>
+  <header class="header main-size">
+    <h1 class="main-title">
+      <a class="no-style" href="/table/list">Sales Management Service</a>
+    </h1>
+    <div class="user-info">
+      <p th:if="${#authentication.principal != 'anonymousUser'}"><span class="username">[[${#authentication.principal.username}]]</span> 님 안녕하세요.</p>
+      <th:block th:with="loginCheck = ${#authentication.principal != 'anonymousUser'}">
+        <a class="login-btn" th:href="${loginCheck ? '/member/logout' : '/member/login'}">[[${loginCheck ? '로그아웃' : '로그인'}]]</a>
+        <a class="join-btn" th:if="${!loginCheck}" href="/member/join">회원가입</a>
+      </th:block>
+    </div>
+  </header>
+  <main class="main">
+    <th:block layout:fragment="content">
+
+    </th:block>
+  </main>
+  <footer class="footer main-size">
+    <h2>제작자 : unnamed</h2>
+  </footer>
+
+  <th:block layout:fragment="script"></th:block>
+</body>
+</html>

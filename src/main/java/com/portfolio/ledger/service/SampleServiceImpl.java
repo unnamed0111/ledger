@@ -1,15 +1,20 @@
 package com.portfolio.ledger.service;
 
 import com.portfolio.ledger.domain.Sample;
+import com.portfolio.ledger.dto.PageRequestDTO;
+import com.portfolio.ledger.dto.PageResponseDTO;
 import com.portfolio.ledger.dto.SampleDTO;
 import com.portfolio.ledger.repository.SampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,12 +36,20 @@ public class SampleServiceImpl implements SampleService {
     }
 
     @Override
-    public List<SampleDTO> getList() {
+    public PageResponseDTO<SampleDTO> getList(PageRequestDTO pageRequestDTO) {
 
-        List<SampleDTO> list = sampleRepository.searchAll().stream()
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<Sample> result = sampleRepository.searchAll(pageable);
+
+        List<SampleDTO> dtoList = result.getContent().stream()
                 .map(sample -> modelMapper.map(sample, SampleDTO.class))
                 .collect(Collectors.toList());
 
-        return list;
+        return PageResponseDTO.<SampleDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int) result.getTotalElements())
+                .build();
     }
 }

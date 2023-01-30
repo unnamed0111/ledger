@@ -41,3 +41,39 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+.hidden {
+    position: absolute;
+    left: -9999px;
+}
+
+.small-size {
+    width: 400px;
+    margin: 0 auto;
+}
+
+.wide-size {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.btn-sales { background-color: #ff5050; }
+.btn-purchase { background-color: #5151ff; }
+
+.sales { color: red; }
+.purchase { color: blue; }
+
+.no-style {
+    text-decoration: none;
+    list-style: none;
+    color: black;
+}
+
+/* 변수 설정 */
+:root {
+    --line-color: rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<th:block layout:fragment="title"><title>매출/지출 내역 조회</title></th:block>
+<th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/table/read.css}"></th:block>
+
+<div layout:fragment="content">
+    <section class="wide-size">
+        <div class="account-form">
+            <label for="date">날짜</label><input id="date" type="text" th:value="${#temporals.format(dto.date, 'yyyy-MM-dd')}" readonly>
+            <label for="title">제목</label><input id="title" type="text" th:value="${dto.title}" readonly>
+            <label for="price">단가</label><input id="price" type="text" th:value="${dto.price}" readonly>
+            <label for="amount">수량</label><input id="amount" type="text" th:value="${dto.amount}" readonly>
+            <label for="totalPrice">총 금액</label>
+            <input  type="text"
+            id="totalPrice"
+            th:value="|${dto.snp ? '+' : '-'}${#numbers.formatDecimal(dto.totalPrice,0,'COMMA',2,'POINT')}|"
+            th:class="${dto.snp ? 'sales' : 'purchase'}"
+            readonly>
+            <label for="writer">작성자</label><input id="writer" type="text" th:value="${dto.writer}" readonly>
+            <label for="content">내용</label><textarea id="content" readonly>[[${dto.content}]]</textarea>
+        </div>
+
+        <form class="user-form" th:action="|@{/table/remove}?${pageRequestDTO.link}|" method="post">
+            <input type="hidden" name="ano" th:value="${dto.ano}">
+            <a th:href="|@{/table/list}?${pageRequestDTO.link}${accountSearchDTO.link}|">목록</a>
+            <th:block th:if="${#authentication.principal != 'anonymousUser' && #authentication.principal.username == dto.writer}">
+                <a th:href="|@{/table/modify(ano=${dto.ano})}&${pageRequestDTO.link}|">수정</a>
+                <button type="submit">삭제</button>
+            </th:block>
+        </form>
+    </section>
+
+    <section class="wide-size">
+        <form id="replyForm" action="" th:if="${#authentication.principal != 'anonymousUser'}" data-mode="post">
+            <label class="hidden" for="replyWriter">작성자</label><input id="replyWriter" type="text" readonly th:value="${#authentication.principal.username}">
+            <label class="hidden" for="replyContent">내용</label><textarea id="replyContent" type="text" name="content" placeholder="내용을 입력해주세요"></textarea>
+            <button id="replyRegisterBtn" type="button">등록</button>
+        </form>
+
+        <ul id="replyList">
+
+        </ul>
+        <ul id="replyPaging">
+
+        </ul>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/reply.js"></script>
+</div>
+<script layout:fragment="script" th:inline="javascript">
+    const ano = [[${dto.ano}]];
+
+    // 로그인한 유저인지 확인
+    const isUser    = [[${#authentication.principal != 'anonymousUser'}]];
+    const userName  = [[${#authentication.principal != 'anonymousUser' ? #authentication.principal.username : null}]];
+
+    // 댓글 노드
+    const replyList         = document.getElementById("replyList");
+    const replyForm         = document.getElementById("replyForm");
+    const replyRegisterBtn  = document.getElementById("replyRegisterBtn");
+    const replyContent      = document.getElementById("replyContent");
+    const replyPaging       = document.getElementById("replyPaging");
+
+    let replyCancelBtn = null;
+
+    // 댓글 목록 출력
+    function getReplies(page, size, goLast) {
+        getList({ano, page, size, goLast})
+            .then(
+                responseDTO => {
+                    console.log(responseDTO)
+                    showReplies(responseDTO);
+                }
+            )
+            .catch(
+                error => {
+                    console.log(error)
+                }
+            )
+    }
+
+    function showReplies(responseDTO) {
+        if(responseDTO.total <= 0) {
+            replyList.innerHTML = '';
+            return;
+        }
+
+        const dtoList = responseDTO.dtoList;
+
+        // 댓글 목록 채우기
+        let str = '';
+
+        for(const dto of dtoList) {
+            str += `<li class="reply-item" data-rno="${dto.rno}">`;
+            str += `
+                <input type="text" value="${dto.writer}" readonly>
+                <textarea type="text" readonly>${dto.content}</textarea>
+                <time datetime="${dto.regDate}">${dto.regDate}</time>
+            `;
+
+            if(userName === dto.writer) {
+                str += `<button class="replyModifyBtn">수정</button>`;
+                str += `<button class="replyRemoveBtn">삭제</button>`;
+            }
+
+            str += '</li>';
+        }
+
+        replyList.innerHTML = str;
+
+        // 댓글 페이징 채우기
+        let str2 = '';
+
+        if(responseDTO.prev) {
+            str2 += `<li><a class="btn-paging" onclick="getReplies(${responseDTO.start - 1}, ${responseDTO.size})">이전</a></li>`;
+        }
+
+        for(let i = responseDTO.start; i <= responseDTO.end; i++) {
+
+            let classStr = '';
+
+            if(i === responseDTO.page) {
+                classStr = `class="active"`
+            }
+
+            str2 += `<li><a ${classStr} onclick="getReplies(${i}, ${responseDTO.size})">${i}</a></li>`
+        }
+
+        if(responseDTO.next) {
+            str2 += `<li><a class="btn-paging" onclick="getReplies(${responseDTO.end + 1}, ${responseDTO.size})">다음</a></li>`
+        }
+
+        replyPaging.innerHTML = str2;
+    }
+
+    // 댓글 등록
+    if(isUser) {
+        replyRegisterBtn.addEventListener("click", function (e) {
+            const replyObj = { ano: ano, content: replyContent.value };
+
+            if(replyForm.getAttribute("data-mode") === 'post') {
+                addReply(replyObj)
+                    .then(
+                        data => {
+                            if(data == null || data.length <= 0) return;
+
+                            getReplies(1, 10);
+                        }
+                    )
+                    .catch(
+                        error => {
+                            alert("Exception... Check the console.log");
+                            console.log(error);
+                        }
+                    );
+            } else {
+                replyObj.rno = replyForm.getAttribute("data-rno");
+
+                modifyReply(replyObj)
+                    .then(
+                        data => {
+                            if(data == null || data.length <= 0) return;
+
+                            setPostMode();
+                            getReplies(1, 10);
+
+                            replyForm.setAttribute("data-mode", "post");
+                        }
+                    )
+                    .catch(
+                        error => {
+                            alert("Exception... Check the console.log");
+                            console.log(error);
+                        }
+                    );
+            }
+        }, false);
+    }
+
+    // 댓글 수정 (and 삭제 - 나중에 추가 )
+
+    if(isUser) {
+        replyList.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const target = e.target;
+
+            if(!target || target.tagName != 'BUTTON') return;
+
+            // const replyItem = target.parentElement;
+            // const rno = replyItem.getAttribute("data-rno");
+            const rno = target.parentElement.getAttribute("data-rno");
+
+            if(!rno) return;
+
+            if(target.classList.contains('replyModifyBtn')) {
+                modifyContent = target // <button>
+                    .previousElementSibling // <time>
+                    .previousElementSibling // <textarea>
+
+                console.log(modifyContent);
+
+                setModifyMode(modifyContent, rno);
+            } else if (target.classList.contains('replyRemoveBtn')) {
+                console.log("REmove Button Check");
+
+                removeReply(rno)
+                    .then(
+                        data => {
+                            console.log(`${data.rno} remove Success`);
+                            setPostMode();
+                            getReplies(1, 10);
+                        }
+                    )
+                    .catch(
+                        error => {
+                            console.log(error);
+                        }
+                    );
+            }
+        }, false);
+    }
+
+    // UI 변경
+    function setPostMode() {
+        replyForm.setAttribute("data-mode", "post");
+        replyForm.removeAttribute("data-rno");
+        replyRegisterBtn.innerText = '등록';
+        replyContent.value = '';
+
+        console.log(replyCancelBtn);
+
+        if(replyCancelBtn == null) return;
+
+        replyCancelBtn.remove();
+        // remove #replyCancelBtn
+    }
+
+    function setModifyMode(target, rno) {
+        replyForm.setAttribute("data-mode", "put");
+        replyForm.setAttribute("data-rno", rno);
+        // replyForm.innerHTML += `<button id="replyCancelBtn">취소</button>`; // 해당 부분은 css로 hidden 처리해도 됨 - 그리고 가능하면 innerHTML 사용하지 말것 DOM객체가 새로 만들어지기 때문에 기존 DOM객체 참조가 틀려짐
+        replyContent.value = target.value;
+        replyRegisterBtn.innerText = "수정";
+
+        replyCancelBtn = document.createElement('button');
+        replyCancelBtn.innerText = '취소';
+        replyForm.appendChild(replyCancelBtn);
+
+        replyCancelBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            setPostMode();
+        }, false);
+
+        replyContent.focus();
+    }
+
+    getReplies(1, 10);
+</script>

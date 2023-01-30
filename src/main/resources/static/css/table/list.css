@@ -1,0 +1,199 @@
+.search-form {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.search-form > div {
+    border: 1px solid var(--line-color);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.search-form > div > * {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    line-height: 40px;
+    height: 40px;
+}
+
+.search-form label {
+    width: 100px;
+    text-indent: 10px;
+    background-color: var(--line-color);
+    border-right: 1px solid var(--line-color);
+}
+
+.search-form > div > .symbol-range {
+    width: 20px;
+    padding: 0 5px;
+}
+
+.search-form > div > input {
+    margin: 0;
+    padding: 0 5px;
+    border: none;
+    width: calc(100% - 100px);
+}
+
+.search-form > div.input-range > input {
+    width: calc(50% - 60px);
+}
+
+.search-form > button {
+    border: none;
+    border-radius: 10px;
+    background-color: var(--line-color);
+    float: right;
+    width: 100px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.account-table {
+    width: 100%;
+    border-collapse: separate;
+}
+
+.account-table > thead th {
+    line-height: 40px;
+    border-bottom: 1px solid var(--line-color);
+}
+
+.account-table .th-date { width: 12%; }
+.account-table .th-title { width: 28%; }
+.account-table .th-price { width: 15%; }
+.account-table .th-amount { width: 15%; }
+.account-table .th-totalPrice { width: 20%; }
+.account-table .th-writer { width: 10%; }
+
+.account-table .main-table > tr > td {
+    padding: 10px 0;
+}
+.account-table .main-table > tr:not(:last-child) > td {
+    border-bottom: 1px solid var(--line-color);
+    border-style: dashed;
+}
+.account-table .main-table > tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.account-table .main-table .col-date,
+.account-table .main-table .col-writer {
+    text-align: center;
+}
+
+.account-table .main-table .col-title,
+.account-table .main-table .col-amount,
+.account-table .main-table .col-totalPrice,
+.account-table .main-table .col-price {
+    text-indent: 10px;
+}
+
+
+.account-table .account-register-header td * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-top: 1px solid var(--line-color);
+    line-height: 20px;
+    height: 20px;
+    font-size: 14px;
+    display: block;
+}
+.account-register-header td {
+    padding-top: 30px;
+}
+
+.account-table .account-register-header td *:not(label) {
+    width: 100%;
+}
+.account-table .account-register-header td:nth-child(5) { position: relative; }
+.account-table .account-register-header td:nth-child(5) label {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.check-sales {
+    background: red;
+}
+
+.check-purchase {
+    background: blue;
+}
+
+.account-table .account-register-body td {
+    border-top: 1px solid;
+    border-color: var(--line-color);
+    padding: 10px;
+}
+
+.account-table .account-register-body td textarea {
+    border: none;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    height: 300px;
+}
+
+.account-table .account-register-footer td {
+    padding: 0 10px 10px;
+    text-align: right;
+}
+.account-table .account-register-footer td button {
+    padding: 10px 20px;
+    margin: 0;
+    border: none;
+    border-radius: 10px;
+    background: #008cff;
+}
+
+.account-table .account-pagination td {
+    padding: 10px 0;
+}
+
+.pagination {
+    overflow: hidden;
+    text-align: center;
+}
+.pagination li {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.pagination li a {
+    display: block;
+    padding: 5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--line-color);
+    text-align: center;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: separate;
+}
+
+.summary-table .summary td {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-color: var(--line-color);
+
+    line-height: 50px;
+    text-indent: 10px;
+}
+.summary-table .summary td:first-child { border-radius: 26px 0 0 26px; }
+.summary-table .summary td:last-child {
+    border-radius: 0 26px 26px 0;
+    border-right: 1px solid var(--line-color);
+}

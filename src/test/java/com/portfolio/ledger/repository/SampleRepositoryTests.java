@@ -2,6 +2,7 @@ package com.portfolio.ledger.repository;
 
 import com.portfolio.ledger.domain.Sample;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +21,10 @@ public class SampleRepositoryTests {
     @Autowired
     private SampleRepository sampleRepository;
 
-    @Test
-    public void testAll() {
+    @BeforeEach
+    public void testBefore() {
         testInsert();
-        testSelectOne();
         testUpdate();
-        testDelete();
-//        testBetween();
-//        testSearch1();
-        testSearchFiltered();
     }
 
     @Test
@@ -37,6 +33,7 @@ public class SampleRepositoryTests {
 
         IntStream.rangeClosed(1, 100).forEach(i -> {
             Sample sample = Sample.builder()
+                    .title("title" + i)
                     .text("content" + i)
                     .build();
 
@@ -62,12 +59,12 @@ public class SampleRepositoryTests {
     public void testUpdate() {
         log.info("...................Update Test...................");
 
-        Long bno = 50L;
+        Long bno = 95L;
 
         Optional<Sample> result = sampleRepository.findById(bno);
         Sample sample = result.orElseThrow();
 
-        sample.change("Update Completed");
+        sample.change("Update Completed", "Fixed Contents");
 
         sampleRepository.save(sample);
     }
@@ -79,29 +76,6 @@ public class SampleRepositoryTests {
         Long bno = 75L;
 
         sampleRepository.deleteById(bno);
-    }
-
-    @Test
-    public void testPaging() {
-        testInsert(); // 초기화
-
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
-
-        Page<Sample> result = sampleRepository.findAll(pageable);
-    }
-
-    @Test
-    public void testBetween() {
-        List<Sample> sampleList = sampleRepository.findByBnoBetween(20L, 30L);
-
-        log.info(sampleList);
-    }
-
-    @Test
-    public void testSearch1() {
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
-
-        sampleRepository.search1(pageable);
     }
 
     @Test
@@ -122,19 +96,13 @@ public class SampleRepositoryTests {
 
     @Test
     public void testSearchAll() {
-        // insert
-        log.info("............................INSERT............................");
-        IntStream.rangeClosed(1, 30).forEach(i -> {
-            Sample sample = Sample.builder()
-                    .text("Test " + i)
-                    .build();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("title").descending());
 
-            sampleRepository.save(sample);
-        });
+        Page<Sample> result = sampleRepository.searchAll(pageable);
 
-        // select
-        log.info("............................SELECT............................");
-        List<Sample> list = sampleRepository.searchAll();
+        log.info(result);
+
+        List<Sample> list = result.getContent();
         list.forEach(sample -> log.info(sample));
     }
 }

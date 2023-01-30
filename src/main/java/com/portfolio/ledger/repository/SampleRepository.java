@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SampleRepository extends JpaRepository<Sample, Long>, SampleSearch {
     List<Sample> findByBnoBetween(Long start, Long end); // 반환타입이 Page<?> 이면 매개변수로 Pageable 객체를 받아야함

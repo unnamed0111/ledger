@@ -1,0 +1,63 @@
+.login-form:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.login-form > * {
+    float: left;
+    display: block;
+    box-sizing: border-box;
+    border: 1px solid var(--line-color);
+    border-radius: 0;
+    line-height: 20px;
+    padding: 10px 5px;
+    margin-bottom: 10px;
+}
+
+.login-form > label {
+    width: 100px;
+    border-radius: 10px 0 0 10px;
+    background-color: var(--line-color);
+    text-align: center;
+}
+
+.login-form > input {
+    width: calc(100% - 100px);
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+}
+
+.login-form > div {
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+}
+
+.login-form > div:first-of-type {
+    border-bottom: var(--line-color);
+    border-radius: 10px 10px 0 0;
+}
+
+.login-form > div:last-child {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.login-form > div:last-child > * {
+    float: left;
+    display: block;
+    border-radius: 12px;
+    border: none;
+    box-sizing: border-box;
+    padding: 5px;
+    line-height: 30px;
+    width: calc(50% - 10px);
+    text-align: center;
+    cursor: pointer;
+}
+
+.login-form > div:last-child > a {
+    margin-left: 10px;
+    background-color: #FEE500;
+}
