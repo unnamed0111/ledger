@@ -1,6 +1,7 @@
 package com.portfolio.ledger.config;
 
 import com.portfolio.ledger.security.CustomUserDetailsService;
+import com.portfolio.ledger.security.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -26,6 +27,7 @@ public class SecurityConfig {
 
     private final DataSource dataSource;
     private final CustomUserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,7 +45,7 @@ public class SecurityConfig {
         http
                 .formLogin() // 로그인을 폼방식으로 처리한다고 명시
                 .loginPage("/member/login") // 로그인 사용자 경로를 설정
-                .defaultSuccessUrl("/table/list");
+                .successHandler(loginSuccessHandler);
 
         http
                 .logout()
