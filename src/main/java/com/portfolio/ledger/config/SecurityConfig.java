@@ -34,12 +34,12 @@ public class SecurityConfig {
         log.info(".......................SECURITY CONFIGURE.......................");
 
         //[ H2 데이터 베이스 관련 설정 배포시 삭제/주석 ===========================================================
-        http
-                .authorizeRequests()
-                .antMatchers("/h2-console/**")
-                .permitAll();
-
-        http.headers().frameOptions().disable();
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/h2-console/**")
+//                .permitAll();
+//
+//        http.headers().frameOptions().disable();
         // H2 데이터 베이스 관련 설정 배포시 삭제/주석 ] ===========================================================
 
         http
@@ -63,7 +63,7 @@ public class SecurityConfig {
         http
                 .oauth2Login() // OAuth2 로그인 활성화
                 .loginPage("/member/login") // OAuth2 로그인 페이지 설정
-                .defaultSuccessUrl("/table/list");
+                .successHandler(loginSuccessHandler);
 
         return http.build(); // 인증/접근 방식을 초기화 시키고 직접 설정할려면 build()를 사용해서 설정해야함
     }

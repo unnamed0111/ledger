@@ -2,6 +2,7 @@ package com.portfolio.ledger.controller.advice;
 
 import com.portfolio.ledger.controller.TableController;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -25,6 +26,12 @@ public class CustomAdvice {
         redirectAttributes.addFlashAttribute("error", errorMap);
 
         return "redirect:/table/list";
+    }
+
+    // 비인증 사용자가 접근시 로그인 페이지로 이동
+    @ExceptionHandler(AccessDeniedException.class)
+    public String accessDeniedHandler(Exception e) {
+        return "redirect:/member/login";
     }
 
     @ExceptionHandler(NoSuchElementException.class)
